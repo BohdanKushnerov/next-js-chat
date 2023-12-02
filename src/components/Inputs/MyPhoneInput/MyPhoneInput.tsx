@@ -2,7 +2,7 @@ import { FC } from 'react';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 
-import { IMyPhoneInputProps } from '@interfaces/IMyPhoneInputProps';
+import { IMyPhoneInputProps } from '@/interfaces/IMyPhoneInputProps';
 
 const MyPhoneInput: FC<IMyPhoneInputProps> = ({ phone, setPhone }) => {
   const handleChangePhone = (value: string) => {

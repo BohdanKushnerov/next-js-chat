@@ -1,9 +1,16 @@
-import Auth from '@/components/Auth/Auth'
+import Auth from "@/components/Auth/Auth";
+// import Authentication from './authentication';
+// import Chat from './chat';
+import "../../src/app/globals.css";
 
-export default function Home() {
+const Home = () => {
   return (
-    <main className="">
+    <main>
+      {/* <Authentication /> */}
+      {/* <Chat /> */}
       <Auth />
     </main>
   );
-}
+};
+
+export default Home;

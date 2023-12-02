@@ -87,12 +87,13 @@ function Auth() {
   };
 
   return (
-    <div className="bg-no-repeat bg-cover bg-center h-screen bg-green-300">
+    <div className="bg-main-bcg bg-no-repeat bg-cover bg-center h-screen">
       <p className="text-white font-bold text-center">{step}</p>
       <div className="bg-mybcg min-w-240px max-w-320px h-150 mx-auto my-0 p-4 rounded-md">
         {step === "Step 1/3" && (
           <>
             <Image
+              priority
               className="mx-auto mb-10 rounded-md"
               src="https://images.nightcafe.studio/jobs/b1mMho0tc6Zo10GkTLXe/b1mMho0tc6Zo10GkTLXe--1--h5wl0.jpg?tr=w-120,c-at_max"
               alt="phone"
@@ -139,6 +140,7 @@ function Auth() {
               <CodeInput setCode={setCode} />
               <button
                 className="w-full p-2 rounded-md bg-myblue text-white font-bold"
+
                 type="submit"
               >
                 Continue
@@ -180,6 +182,7 @@ function Auth() {
                 />
               </label>
               <button
+                // className="w-full p-2 rounded-md bg-myblue text-white font-bold"
                 className="w-full p-2 rounded-md bg-myblue text-white font-bold"
                 type="submit"
               >

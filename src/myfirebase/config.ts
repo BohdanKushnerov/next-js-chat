@@ -20,7 +20,7 @@ const firebaseConfig = {
   databaseURL: process.env.NEXT_PUBLIC_DB_URL,
 };
 
-console.log("firebaseConfig", firebaseConfig);
+// console.log("firebaseConfig", firebaseConfig);
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
