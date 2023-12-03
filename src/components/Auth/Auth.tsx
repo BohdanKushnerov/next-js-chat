@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import { FC, useState } from "react";
 import { ConfirmationResult, updateProfile } from "firebase/auth";
