@@ -1,16 +1,16 @@
 "use client";
 
 import { useEffect } from "react";
-// import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
-import Auth from "@/components/Auth/Auth";
+import MainChatLoader from "@/components/MainChatLoader/MainChatLoader";
 import { auth } from "@/myfirebase/config";
 import useChatStore from "@/zustand/store";
-import MainChatLoader from "@/components/MainChatLoader/MainChatLoader";
-import ChatPage from "./[id]/page";
+import ChatPage from "./[chatID]/page";
 
 const Home = () => {
-  // const router = useRouter();
+  const router = useRouter();
+  const isLoggedIn = useChatStore((state) => state.isLoggedIn);
   const updateCurrentUser = useChatStore((state) => state.updateCurrentUser);
 
   console.log("updateCurrentUser", updateCurrentUser);
@@ -33,21 +33,21 @@ const Home = () => {
     const unsub = auth.onAuthStateChanged((authUser) => {
       if (authUser) {
         updateCurrentUser(authUser);
+        // router.push()
       } else {
         updateCurrentUser(null);
+        router.push('auth')
       }
     });
 
     return () => unsub();
-  }, [updateCurrentUser]);
+  }, [router, updateCurrentUser]);
 
   return (
     <>
       <main>
-        {updateCurrentUser ? <ChatPage /> : <Auth />}
-
+        {isLoggedIn && <ChatPage />}
         <MainChatLoader />
-        {/* <div id="modal-root"></div> */}
       </main>
     </>
   );

@@ -1,14 +1,9 @@
 import React from "react";
 
-// import Auth from "@/components/Auth/Auth";
+import Auth from "@/components/Auth/Auth";
 
-const Authentication = () => {
-  return (
-    <div>
-      <div>Authentication</div>
-      {/* <Auth /> */}
-    </div>
-  );
+const AuthPage = () => {
+  return <Auth />;
 };
 
-export default Authentication;
+export default AuthPage;

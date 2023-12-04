@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { FC, useState } from "react";
 import { ConfirmationResult, updateProfile } from "firebase/auth";
@@ -13,13 +13,14 @@ import { auth, db } from "@/myfirebase/config";
 import handleSubmitVerifyCode from "./utils/handleSubmitVerifyCodeVerifyCode";
 import setUpRecaptcha from "./utils/setUpRecaptcha";
 import { AuthSteps } from "@/types/AuthSteps";
+import { useRouter } from "next/navigation";
 
 //==========
 // закоментированно ЗУСТАНД
 // await updateCurrentUser(user);
 //==========
 
-function Auth() {
+const Auth = () => {
   const [step, setStep] = useState<AuthSteps>("Step 1/3");
   const [phone, setPhone] = useState<E164Number | string>("16505553435");
   const [code, setCode] = useState("");
@@ -27,6 +28,7 @@ function Auth() {
   const [surname, setSurname] = useState("");
   const [confirmationResult, setConfirmationResult] =
     useState<ConfirmationResult | null>(null);
+  const router = useRouter();
 
   // const updateCurrentUser = useChatStore(state => state.updateCurrentUser);
   const handleSubmitPhone = async (e: React.FormEvent): Promise<void> => {
@@ -73,6 +75,8 @@ function Auth() {
 
       // =================создаем обьект чаты нашего юзера которого мы только создали=======================
       await setDoc(doc(db, "userChats", user.uid), {});
+      
+      router.push("/");
     } else {
       console.error("Пользователь не вошел в систему");
     }
@@ -133,14 +137,19 @@ function Auth() {
 
             <form
               onSubmit={(e) =>
-                handleSubmitVerifyCode(e, confirmationResult, code, setStep)
+                handleSubmitVerifyCode(
+                  e,
+                  confirmationResult,
+                  code,
+                  setStep,
+                  router
+                )
               }
               className="flex flex-col gap-1"
             >
               <CodeInput setCode={setCode} />
               <button
                 className="w-full p-2 rounded-md bg-myblue text-white font-bold"
-
                 type="submit"
               >
                 Continue
@@ -194,6 +203,6 @@ function Auth() {
       </div>
     </div>
   );
-}
+};
 
 export default Auth;

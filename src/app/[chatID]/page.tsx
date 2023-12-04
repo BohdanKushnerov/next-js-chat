@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -8,7 +8,7 @@ import { Transition } from "react-transition-group";
 
 import Chat from "@/components/Chat/Chat";
 import Sidebar from "@/components/Sidebar/Sidebar";
-import { database, db } from "@/myfirebase/config";
+import { auth, database, db } from "@/myfirebase/config";
 import useChatStore from "@/zustand/store";
 import handleSelectChat from "@/utils/handleSelectChat";
 import { AppScreenType } from "@/types/AppScreenType";
@@ -31,8 +31,22 @@ const ChatPage = () => {
   const updateCurrentChatInfo = useChatStore(
     (state) => state.updateCurrentChatInfo
   );
+  const updateCurrentUser = useChatStore((state) => state.updateCurrentUser);
 
   console.log("screen --> Home");
+
+  useEffect(() => {
+    const unsub = auth.onAuthStateChanged((authUser) => {
+      if (authUser) {
+        updateCurrentUser(authUser);
+      } else {
+        updateCurrentUser(null);
+        router.push("auth");
+      }
+    });
+
+    return () => unsub();
+  }, [router, updateCurrentUser]);
 
   useEffect(() => {
     if (screen === "Sidebar") {
