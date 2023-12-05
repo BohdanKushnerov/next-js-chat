@@ -8,11 +8,11 @@ import { ChatListItemType } from '@/types/ChatListItemType';
 const ChatList: FC<IChatListProps> = ({ setScreen }) => {
   const myUserChatList = useMyUserChatList(); // загрузка списка моих чатов
 
-  console.log("myUserChatList", myUserChatList);
+  // console.log("myUserChatList", myUserChatList);
 
   console.log('screen --> ChatList');
 
-  console.log(myUserChatList);
+  // console.log(myUserChatList);
 
   return (
     <div>

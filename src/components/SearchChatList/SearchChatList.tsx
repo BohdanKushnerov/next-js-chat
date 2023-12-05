@@ -46,7 +46,7 @@ const SearchChatList: FC<IChatListProps> = ({ setScreen }) => {
 
             return (
               <li
-                className="flex items-center content-center gap-3 h-72px p-2"
+                className="flex items-center content-center gap-3 h-72px p-2 cursor-pointer"
                 key={doc.id}
                 onClick={() => handleManageCreateChat(docData)}
               >

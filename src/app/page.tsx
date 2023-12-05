@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 import MainChatLoader from "@/components/MainChatLoader/MainChatLoader";
@@ -8,12 +8,12 @@ import { auth } from "@/myfirebase/config";
 import useChatStore from "@/zustand/store";
 import ChatPage from "./[chatID]/page";
 
-const Home = () => {
+const Home = React.memo(function Home() {
   const router = useRouter();
   const isLoggedIn = useChatStore((state) => state.isLoggedIn);
   const updateCurrentUser = useChatStore((state) => state.updateCurrentUser);
 
-  console.log("updateCurrentUser", updateCurrentUser);
+  // console.log("updateCurrentUser", updateCurrentUser);
 
   useEffect(() => {
     if (
@@ -36,7 +36,7 @@ const Home = () => {
         // router.push()
       } else {
         updateCurrentUser(null);
-        router.push('auth')
+        router.push("auth");
       }
     });
 
@@ -51,6 +51,6 @@ const Home = () => {
       </main>
     </>
   );
-};
+});
 
 export default Home;

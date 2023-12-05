@@ -43,7 +43,7 @@ const MessageList: FC = () => {
 
   // console.log('screen --> MessageList');
 
-  console.log('groupedMessages', groupedMessages);
+  // console.log('groupedMessages', groupedMessages);
 
   const selectedDocDataMessage = messages?.find(
     message => message.id === selectedItemIdForOpenModal
@@ -235,7 +235,7 @@ const MessageList: FC = () => {
       if (arrayURLsOfFiles) {
         const promisesArrOfURLs = arrayURLsOfFiles.map(
           (el: { url: string }) => {
-            console.log(el.url);
+            // console.log(el.url);
             const desertRef = ref(storage, el.url);
 
             return deleteObject(desertRef).then(() =>
@@ -354,7 +354,7 @@ const MessageList: FC = () => {
                       {formatDateForGroupMessages(date)}
                     </p>
                   </div>
-                  {groupedMessages[date].map((message: DocumentData, index) => {
+                  {groupedMessages[date].map((message: DocumentData, index: number) => {
                     const currentItem =
                       selectedItemIdForOpenModal === message.id;
 

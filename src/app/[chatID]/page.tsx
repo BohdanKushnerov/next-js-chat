@@ -87,8 +87,8 @@ const ChatPage = () => {
     ) {
       const combinedUsersChatUID = localStorage.getItem("currentChatId");
 
-      console.log("combinedUsersChatUID", combinedUsersChatUID);
-      console.log("currentUserUID", currentUserUID);
+      // console.log("combinedUsersChatUID", combinedUsersChatUID);
+      // console.log("currentUserUID", currentUserUID);
 
       if (combinedUsersChatUID && currentUserUID) {
         const res = await getDoc(doc(db, "userChats", currentUserUID));

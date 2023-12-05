@@ -7,7 +7,7 @@ import {
   updateDoc,
 } from 'firebase/firestore';
 // import { NavigateFunction } from 'react-router-dom';
-import { NextRouter } from 'next/router';
+import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 
 import { auth, db } from '@/myfirebase/config';
 import handleSelectChat from '@/utils/handleSelectChat';
@@ -18,7 +18,7 @@ const handleCreateChat = async (
   user: DocumentData,
   updateCurrentChatInfo: (chat: ChatListItemType) => void,
   // navigate: NavigateFunction
-  router: NextRouter
+  router: AppRouterInstance
 ) => {
   // выйдем если не авторизирован
   if (!auth?.currentUser?.uid) return;

@@ -1,29 +1,27 @@
-import { FC } from 'react';
-import Link from 'next/link';
+import { FC } from "react";
+import Link from "next/link";
 // import { Link, useLocation } from 'react-router-dom';
 
-import AvatarProfile from '@/components/AvatarProfile/AvatarProfile';
-import useChatStore from '@/zustand/store';
-import useChatInfo from '@/hooks/useChatInfo';
-import useIsOnlineStatus from '@/hooks/useIsOnlineStatus';
-import useLengthOfMyUnreadMsgs from '@/hooks/useLengthOfMyUnreadMsgs';
-import useIsReadMyLastMessage from '@/hooks/useIsReadMyLastMessage';
-import truncateLastMessageString from '@/utils/truncateLastMessageString';
-import handleSelectChat from '@/utils/handleSelectChat';
-import { IChatListItemProps } from '@/interfaces/IChatListItemProps';
-// import sprite from '@assets/sprite.svg';
-// import sprite from '/sprite.svg';
+import AvatarProfile from "@/components/AvatarProfile/AvatarProfile";
+import useChatStore from "@/zustand/store";
+import useChatInfo from "@/hooks/useChatInfo";
+import useIsOnlineStatus from "@/hooks/useIsOnlineStatus";
+import useLengthOfMyUnreadMsgs from "@/hooks/useLengthOfMyUnreadMsgs";
+import useIsReadMyLastMessage from "@/hooks/useIsReadMyLastMessage";
+import truncateLastMessageString from "@/utils/truncateLastMessageString";
+import handleSelectChat from "@/utils/handleSelectChat";
+import { IChatListItemProps } from "@/interfaces/IChatListItemProps";
 
 const ChatListItem: FC<IChatListItemProps> = ({ chatInfo, setScreen }) => {
   // const location = useLocation();
 
   // zustand
-  const { uid } = useChatStore(state => state.currentUser);
-  const { chatUID } = useChatStore(state => state.currentChatInfo);
+  const { uid } = useChatStore((state) => state.currentUser);
+  const { chatUID } = useChatStore((state) => state.currentChatInfo);
   const updateCurrentChatInfo = useChatStore(
-    state => state.updateCurrentChatInfo
+    (state) => state.updateCurrentChatInfo
   );
-  const resetMessage = useChatStore(state => state.resetMessage);
+  const resetMessage = useChatStore((state) => state.resetMessage);
 
   const isOnline = useIsOnlineStatus(chatInfo[1].userUID); // следим за состоянием онлайн/офлайн
   const userInfo = useChatInfo(chatInfo[1].userUID); // обновляет инфо о текущем юзере в списке чата
@@ -38,13 +36,13 @@ const ChatListItem: FC<IChatListItemProps> = ({ chatInfo, setScreen }) => {
     resetMessage();
 
     if (setScreen) {
-      setScreen('Chat');
+      setScreen("Chat");
     }
   };
 
   return (
     <li
-      className="block w-full border border-inputChar border-l-transparent border-r-transparent p-2"
+      className="block w-full border border-inputChar border-l-transparent border-r-transparent p-2 cursor-pointer"
       onClick={handleManageSelectChat}
     >
       <Link
@@ -54,9 +52,7 @@ const ChatListItem: FC<IChatListItemProps> = ({ chatInfo, setScreen }) => {
         } ${
           chatUID !== chatInfo[0] && "hover:bg-zinc-400 hover:dark:bg-zinc-700"
         } `}
-        // to={chatInfo[0]}
         href={chatInfo[0]}
-        // state={{ from: location }}
       >
         <AvatarProfile
           photoURL={userInfo?.photoURL}
