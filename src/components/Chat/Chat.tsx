@@ -1,45 +1,25 @@
-import { FC, useState } from 'react';
-// import { useNavigate } from 'react-router-dom';
+import { FC, useState } from "react";
 
-import MessageList from '@/components/MessageList/MessageList';
-import SearchMessages from '@/components/SearchMessages/SearchMessages';
-import ChatHeader from '../ChatHeader/ChatHeader';
-import ChatForm from '../ChatForm/ChatForm';
-import useChatStore from '@/zustand/store';
-import { IChat } from '@/interfaces/IChat';
-import { useRouter } from 'next/navigation';
+import MessageList from "@/components/MessageList/MessageList";
+import SearchMessages from "@/components/SearchMessages/SearchMessages";
+import ChatHeader from "../ChatHeader/ChatHeader";
+import ChatForm from "../ChatForm/ChatForm";
+import useChatStore from "@/zustand/store";
 
-const Chat: FC<IChat> = ({ setScreen }) => {
+const Chat: FC = () => {
   const [isShowSearchMessages, setIsShowSearchMessages] = useState(false);
-  const router = useRouter();
-  // const navigate = useNavigate();
 
-  const { chatUID } = useChatStore(state => state.currentChatInfo);
-  const resetCurrentChatInfo = useChatStore(
-    state => state.resetCurrentChatInfo
-  );
+  const { chatUID } = useChatStore((state) => state.currentChatInfo);
 
-  console.log('screen --> Chat');
-
-  const handleClickBackToSidebarScreen = () => {
-    if (setScreen) {
-      setScreen('Sidebar');
-      resetCurrentChatInfo();
-      // navigate('/');
-      router.push('/')
-    }
-  };
+  console.log("screen --> Chat");
 
   return (
     <>
+    {/* <h2 className="text-white">qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq</h2> */}
       <div className="relative h-full w-screen xl:flex xl:flex-col xl:items-center bg-transparent overflow-hidden">
         {chatUID ? (
           <>
-            <ChatHeader
-              setScreen={setScreen}
-              handleClickBackToSidebarScreen={handleClickBackToSidebarScreen}
-              setIsShowSearchMessages={setIsShowSearchMessages}
-            />
+            <ChatHeader setIsShowSearchMessages={setIsShowSearchMessages} />
 
             <MessageList />
 
