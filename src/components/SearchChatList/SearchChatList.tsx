@@ -1,22 +1,21 @@
-import { FC } from 'react';
-import { DocumentData } from 'firebase/firestore';
+import { FC } from "react";
+import { DocumentData } from "firebase/firestore";
 // import { useNavigate } from 'react-router-dom';
 
-import AvatarProfile from '@/components/AvatarProfile/AvatarProfile';
-import useChatStore from '@/zustand/store';
-import useSearchUsers from '@/hooks/useSearchUsers';
-import handleCreateChat from '@/utils/handleCreateChat';
-import { IChatListProps } from '@/interfaces/IChatListProps';
-import { useRouter } from 'next/navigation';
+import AvatarProfile from "@/components/AvatarProfile/AvatarProfile";
+import useChatStore from "@/zustand/store";
+import useSearchUsers from "@/hooks/useSearchUsers";
+import handleCreateChat from "@/utils/handleCreateChat";
+import { useRouter } from "next/navigation";
 
-const SearchChatList: FC<IChatListProps> = ({ setScreen }) => {
+const SearchChatList: FC = () => {
   // const navigate = useNavigate();
   const router = useRouter();
 
-  const updateSearchValue = useChatStore(state => state.updateSearchValue);
-  const currentUser = useChatStore(state => state.currentUser);
+  const updateSearchValue = useChatStore((state) => state.updateSearchValue);
+  const currentUser = useChatStore((state) => state.currentUser);
   const updateCurrentChatInfo = useChatStore(
-    state => state.updateCurrentChatInfo
+    (state) => state.updateCurrentChatInfo
   );
 
   const { searchChatList, setSearchChatList } = useSearchUsers(); // поиск контактов(юзеров) в поисковой строке
@@ -25,11 +24,7 @@ const SearchChatList: FC<IChatListProps> = ({ setScreen }) => {
     handleCreateChat(docData, updateCurrentChatInfo, router);
 
     setSearchChatList(null);
-    updateSearchValue('');
-
-    if (setScreen) {
-      setScreen('Chat');
-    }
+    updateSearchValue("");
   };
 
   return (
@@ -37,7 +32,7 @@ const SearchChatList: FC<IChatListProps> = ({ setScreen }) => {
       <ul className="">
         {/* тут список юзеров в поиске */}
         {searchChatList &&
-          searchChatList.docs.map(doc => {
+          searchChatList.docs.map((doc) => {
             // console.log('chatList search doc', doc.data());
             // фильтруем себя
             if (doc.data().uid === currentUser.uid) return;
