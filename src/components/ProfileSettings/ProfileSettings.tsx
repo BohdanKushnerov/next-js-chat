@@ -1,22 +1,22 @@
-import { FC, useRef, useState } from 'react';
-import Avatar from 'react-avatar';
-import Image from 'next/image';
-import { doc, updateDoc } from 'firebase/firestore';
-import { updateProfile } from 'firebase/auth';
+import { FC, useRef, useState } from "react";
+import Avatar from "react-avatar";
+import Image from "next/image";
+import { doc, updateDoc } from "firebase/firestore";
+import { updateProfile } from "firebase/auth";
 import {
   deleteObject,
   getDownloadURL,
   ref,
   uploadBytesResumable,
-} from 'firebase/storage';
-import { Line } from 'rc-progress';
-import { v4 as uuidv4 } from 'uuid';
+} from "firebase/storage";
+import { Line } from "rc-progress";
+import { v4 as uuidv4 } from "uuid";
 
-import ModalWindow from '@/components/Modals/ModalWindow/ModalWindow';
-import ButtonCloseModal from '@/components/Buttons/ButtonCloseModal/ButtonCloseModal';
-import { auth, db, storage } from '@/myfirebase/config';
-import useChatStore from '@/zustand/store';
-import handleClickChangeDisplayName from '@/utils/handleClickChangeDisplayName';
+import ModalWindow from "@/components/Modals/ModalWindow/ModalWindow";
+import ButtonCloseModal from "@/components/Buttons/ButtonCloseModal/ButtonCloseModal";
+import { auth, db, storage } from "@/myfirebase/config";
+import useChatStore from "@/zustand/store";
+import handleClickChangeDisplayName from "@/utils/handleClickChangeDisplayName";
 // import sprite from '@assets/sprite.svg';
 // import sprite from '/sprite.svg';
 
@@ -31,15 +31,17 @@ const ProfileSettings: FC = () => {
   const photoProfileInputRef = useRef<HTMLInputElement>(null);
 
   const { uid, displayName, photoURL } = useChatStore(
-    state => state.currentUser
+    (state) => state.currentUser
   );
-  const updateCurrentUser = useChatStore(state => state.updateCurrentUser);
-  const updateSidebarScreen = useChatStore(state => state.updateSidebarScreen);
+  const updateCurrentUser = useChatStore((state) => state.updateCurrentUser);
+  const updateSidebarScreen = useChatStore(
+    (state) => state.updateSidebarScreen
+  );
 
-  console.log('screen --> ProfileSettings');
+  console.log("screen --> ProfileSettings");
 
   const handleClickTurnBackToDefaultScreen = () => {
-    updateSidebarScreen('default');
+    updateSidebarScreen("default");
   };
 
   const handleChangeDisplayName = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,10 +49,10 @@ const ProfileSettings: FC = () => {
   };
 
   const handleToggleProfilePhotoModal = () => {
-    setIsModalPhotoProfileOpen(prev => !prev);
+    setIsModalPhotoProfileOpen((prev) => !prev);
 
     if (isModalPhotoProfileOpen && photoProfileInputRef.current) {
-      photoProfileInputRef.current.value = '';
+      photoProfileInputRef.current.value = "";
     }
   };
 
@@ -88,23 +90,23 @@ const ProfileSettings: FC = () => {
           const profilePhotoUrlFromStorage: string = await new Promise(
             (resolve, reject) => {
               uploadTask.on(
-                'state_changed',
-                snapshot => {
+                "state_changed",
+                (snapshot) => {
                   const progress =
                     (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                  console.log('Upload is ' + progress + '% done');
+                  console.log("Upload is " + progress + "% done");
 
                   setProfilePhotoUploadStatus(progress);
                 },
-                error => {
-                  console.log('error', error);
+                (error) => {
+                  console.log("error", error);
                 },
                 async () => {
                   try {
                     const downloadURL = await getDownloadURL(
                       uploadTask.snapshot.ref
                     );
-                    console.log('File available at', downloadURL);
+                    console.log("File available at", downloadURL);
 
                     resolve(downloadURL);
                   } catch (error) {
@@ -119,7 +121,7 @@ const ProfileSettings: FC = () => {
             const desertRef = ref(storage, photoURL);
 
             await deleteObject(desertRef).then(() =>
-              console.log('delete old photoURL success')
+              console.log("delete old photoURL success")
             );
           }
 
@@ -127,23 +129,23 @@ const ProfileSettings: FC = () => {
             photoURL: profilePhotoUrlFromStorage,
           })
             .then(() => {
-              console.log('photoURL updated!');
+              console.log("photoURL updated!");
               updateCurrentUser(auth.currentUser);
             })
-            .catch(error => {
-              console.log('handleUpdateProfilePhoto error', error);
+            .catch((error) => {
+              console.log("handleUpdateProfilePhoto error", error);
               // An error occurred
             });
 
           // update doc user чтобы появилась ссылка в photoURL
-          await updateDoc(doc(db, 'users', uid), {
+          await updateDoc(doc(db, "users", uid), {
             photoURL: profilePhotoUrlFromStorage,
           });
 
           handleToggleProfilePhotoModal();
           setProfilePhotoUploadStatus(null);
         } catch (error) {
-          console.log('handleUpdateProfilePhoto error', error);
+          console.log("handleUpdateProfilePhoto error", error);
         }
       }
     }
@@ -206,7 +208,10 @@ const ProfileSettings: FC = () => {
                 width={48}
                 height={48}
               >
-                <use href={"/sprite.svg" + "#icon-photo-focus"} fill="#000000" />
+                <use
+                  href={"/sprite.svg" + "#icon-photo-focus"}
+                  fill="#000000"
+                />
               </svg>
             </>
           )}
@@ -264,8 +269,9 @@ const ProfileSettings: FC = () => {
                 />
               )}
               <p className="w-80 text-center text-black dark:text-white text-xs">
-                if you're happy with it click the button "Change photo profile"
-                or close the window and try new photo
+                {
+                  "If you're satisfied, click the 'Change Profile Photo' button, or close the window and try a new photo"
+                }
               </p>
               <button
                 className="w-48 border-2 rounded-3xl text-black dark:text-white border-black dark:border-white hover:shadow-mainShadow hover:bg-zinc-400 hover:dark:bg-gray-800 disabled:text-zinc-600"

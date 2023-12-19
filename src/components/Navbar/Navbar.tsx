@@ -7,12 +7,14 @@ import ModalWindow from "@/components/Modals/ModalWindow/ModalWindow";
 import Theme from "@/components/Theme/Theme";
 import { auth } from "@/myfirebase/config";
 import useChatStore from "@/zustand/store";
+import { useRouter } from "next/navigation";
 // import sprite from '@assets/sprite.svg';
 // import sprite from "/sprite.svg";
 
 const Navbar: FC = () => {
   const [isModalOpen, setIsModelOpen] = useState(false);
   const nodeRefNavBar = useRef(null);
+  const router = useRouter()
 
   const currentUser = useChatStore((state) => state.currentUser);
   const resetCurrentChatInfo = useChatStore(
@@ -26,6 +28,7 @@ const Navbar: FC = () => {
     resetCurrentChatInfo();
 
     await signOut(auth);
+    router.push('/auth')
   };
 
   const handleToggleModal = () => {

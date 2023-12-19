@@ -12,6 +12,7 @@ const nextConfig = {
     NEXT_PUBLIC_DB_URL: process.env.NEXT_PUBLIC_DB_URL,
   },
   images: {
+    formats: ["image/avif", "image/webp"],
     domains: ["images.nightcafe.studio", "firebasestorage.googleapis.com"],
   },
 };

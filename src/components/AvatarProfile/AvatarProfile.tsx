@@ -1,7 +1,8 @@
-import { FC } from 'react';
-import Avatar from 'react-avatar';
+import { FC } from "react";
+import Avatar from "react-avatar";
+import Image from "next/image";
 
-import { IAvatarProfileProps } from '@interfaces/IAvatarProfileProps';
+import { IAvatarProfileProps } from "@/interfaces/IAvatarProfileProps";
 
 const AvatarProfile: FC<IAvatarProfileProps> = ({
   photoURL,
@@ -9,10 +10,10 @@ const AvatarProfile: FC<IAvatarProfileProps> = ({
   size,
 }) => {
   return photoURL ? (
-    <img
+    <Image
       className="rounded-full shadow-secondaryShadow transition-all duration-150 group-hover:scale-105"
-      width={size}
-      height={size}
+      width={Number(size)}
+      height={Number(size)}
       src={photoURL}
       alt={displayName}
     />

@@ -30,6 +30,8 @@ const Auth = () => {
     useState<ConfirmationResult | null>(null);
   const router = useRouter();
 
+  console.log('Auth')
+
   // const updateCurrentUser = useChatStore(state => state.updateCurrentUser);
   const handleSubmitPhone = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();

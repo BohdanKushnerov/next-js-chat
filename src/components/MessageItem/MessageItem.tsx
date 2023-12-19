@@ -5,6 +5,7 @@ import useChatStore from '@/zustand/store';
 import useMakeReadMsg from '@/hooks/useMakeReadMsg';
 import formatTime from '@/utils/formatTime';
 import { IMessageItemProps } from '@/interfaces/IMessageItemProps';
+import Image from 'next/image';
 // import sprite from '@assets/sprite.svg';
 // import sprite from '/sprite.svg';
 
@@ -57,15 +58,17 @@ const MessageItem: FC<IMessageItemProps> = ({ msg }) => {
                 ) {
                   if (msg.data().file.length === 1) {
                     return (
-                      <img
+                      <Image
                         key={index}
                         src={file.url}
                         alt={file.type}
+                        width={448}
+                        height={448}
                         style={{
-                          width: 448,
-                          height: 'auto',
+                          // width: 448,
+                          // height: "auto",
                           maxHeight: 400,
-                          objectFit: 'cover',
+                          objectFit: "cover",
                           borderRadius: 6,
                         }}
                         loading="lazy"
@@ -73,15 +76,17 @@ const MessageItem: FC<IMessageItemProps> = ({ msg }) => {
                     );
                   } else {
                     return (
-                      <img
+                      <Image
                         key={index}
                         src={file.url}
                         alt={file.type}
+                        width={index === 0 ? 320 : 159}
+                        height={index === 0 ? 320 : 159}
                         style={{
-                          width: index === 0 ? 320 : 159,
-                          height: 'auto',
-                          maxHeight: index === 0 ? 320 : 159,
-                          objectFit: 'cover',
+                          // width: index === 0 ? 320 : 159,
+                          // height: "auto",
+                          // maxHeight: index === 0 ? 320 : 159,
+                          objectFit: "cover",
                           borderRadius: 6,
                         }}
                         loading="lazy"

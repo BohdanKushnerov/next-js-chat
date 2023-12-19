@@ -12,7 +12,7 @@ import truncateLastMessageString from "@/utils/truncateLastMessageString";
 import handleSelectChat from "@/utils/handleSelectChat";
 import { IChatListItemProps } from "@/interfaces/IChatListItemProps";
 
-const ChatListItem: FC<IChatListItemProps> = ({ chatInfo, setScreen }) => {
+const ChatListItem: FC<IChatListItemProps> = ({ chatInfo}) => {
   // const location = useLocation();
 
   // zustand
@@ -34,10 +34,6 @@ const ChatListItem: FC<IChatListItemProps> = ({ chatInfo, setScreen }) => {
     handleSelectChat(chatInfo, updateCurrentChatInfo);
     // при выборе нового чата сброс сообщения в ChatForm
     resetMessage();
-
-    if (setScreen) {
-      setScreen("Chat");
-    }
   };
 
   return (
