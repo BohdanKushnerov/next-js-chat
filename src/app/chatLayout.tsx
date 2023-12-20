@@ -13,20 +13,21 @@ import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 import { Transition } from "react-transition-group";
 
-const ChatLayout = ({ children }: { children: React.ReactNode }) => {
-  // const [windowHeight, setWindowHeight] = useState(() => window.innerHeight);
-  const [windowHeight, setWindowHeight] = useState(0);
-  // const [screen, setScreen] = useState<AppScreenType>(() => {
-  //   if (window.innerWidth <= 640) {
-  //     return window.location.pathname === "/react-web-messenger"
-  //       ? "Sidebar"
-  //       : "Chat";
-  //   } else {
-  //     return "FullScreen";
-  //   }
-  // });
-  const [screen, setScreen] = useState<AppScreenType>("FullScreen");
+// const [windowHeight, setWindowHeight] = useState(() => window.innerHeight);
 
+// const [screen, setScreen] = useState<AppScreenType>(() => {
+//   if (window.innerWidth <= 640) {
+//     return window.location.pathname === "/react-web-messenger"
+//       ? "Sidebar"
+//       : "Chat";
+//   } else {
+//     return "FullScreen";
+//   }
+// });
+
+const ChatLayout = ({ children }: { children: React.ReactNode }) => {
+  const [windowHeight, setWindowHeight] = useState(0);
+  const [screen, setScreen] = useState<AppScreenType>("FullScreen");
   const nodeRefSidebar = useRef(null);
   const nodeRefChat = useRef(null);
   const router = useRouter();
@@ -91,7 +92,7 @@ const ChatLayout = ({ children }: { children: React.ReactNode }) => {
     if (!windowHeight) {
       setWindowHeight(window.innerHeight);
     }
-    
+
     const handleResize = () => {
       setWindowHeight(window.innerHeight);
 

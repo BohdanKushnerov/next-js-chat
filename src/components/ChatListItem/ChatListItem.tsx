@@ -12,7 +12,7 @@ import truncateLastMessageString from "@/utils/truncateLastMessageString";
 import handleSelectChat from "@/utils/handleSelectChat";
 import { IChatListItemProps } from "@/interfaces/IChatListItemProps";
 
-const ChatListItem: FC<IChatListItemProps> = ({ chatInfo}) => {
+const ChatListItem: FC<IChatListItemProps> = ({ chatInfo }) => {
   // const location = useLocation();
 
   // zustand
@@ -21,7 +21,6 @@ const ChatListItem: FC<IChatListItemProps> = ({ chatInfo}) => {
   const updateCurrentChatInfo = useChatStore(
     (state) => state.updateCurrentChatInfo
   );
-  const resetMessage = useChatStore((state) => state.resetMessage);
 
   const isOnline = useIsOnlineStatus(chatInfo[1].userUID); // следим за состоянием онлайн/офлайн
   const userInfo = useChatInfo(chatInfo[1].userUID); // обновляет инфо о текущем юзере в списке чата
@@ -32,8 +31,6 @@ const ChatListItem: FC<IChatListItemProps> = ({ chatInfo}) => {
 
   const handleManageSelectChat = () => {
     handleSelectChat(chatInfo, updateCurrentChatInfo);
-    // при выборе нового чата сброс сообщения в ChatForm
-    resetMessage();
   };
 
   return (

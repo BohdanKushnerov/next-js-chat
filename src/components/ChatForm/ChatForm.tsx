@@ -1,30 +1,29 @@
-import React, { FC, useEffect, useRef } from 'react';
+import React, { FC, useEffect, useRef } from "react";
 
-import FileInput from '@/components/Inputs/FileInput/FileInput';
-import Emoji from '@/components/Emoji/Emoji';
-import useChatStore from '@/zustand/store';
-import useBeforeUnloadToStopTyping from '@/hooks/useBeforeUnloadToStopTyping';
-import useTyping from '@/hooks/useTyping';
-import handleUpdateEditMessage from '@/utils/handleUpdateEditMessage';
-import handleSendMessage from '@/utils/handleSendMessage';
-// import sprite from '@assets/sprite.svg';
-// import sprite from '/sprite.svg';
+import FileInput from "@/components/Inputs/FileInput/FileInput";
+import Emoji from "@/components/Emoji/Emoji";
+import useChatStore from "@/zustand/store";
+import useBeforeUnloadToStopTyping from "@/hooks/useBeforeUnloadToStopTyping";
+import useTyping from "@/hooks/useTyping";
+import handleUpdateEditMessage from "@/utils/handleUpdateEditMessage";
+import handleSendMessage from "@/utils/handleSendMessage";
 
 const ChatForm: FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const myTypingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const message = useChatStore(state => state.message);
-  const setMessage = useChatStore(state => state.setMessage);
-  const currentUserUID = useChatStore(state => state.currentUser.uid);
-  const { chatUID, userUID } = useChatStore(state => state.currentChatInfo);
-  const editingMessageInfo = useChatStore(state => state.editingMessageInfo);
-  const resetEditingMessage = useChatStore(state => state.resetEditingMessage);
+  const message = useChatStore((state) => state.message);
+  const setMessage = useChatStore((state) => state.setMessage);
+  const currentUserUID = useChatStore((state) => state.currentUser.uid);
+  const { chatUID, userUID } = useChatStore((state) => state.currentChatInfo);
+  const editingMessageInfo = useChatStore((state) => state.editingMessageInfo);
+  const resetEditingMessage = useChatStore(
+    (state) => state.resetEditingMessage
+  );
 
   useBeforeUnloadToStopTyping(); // еффект beforeunload чтобы прекратить состояние печати
-  useTyping(message, myTypingTimeoutRef); // запуск таймаута при печатании + сброс при смене чата
+  useTyping(message); // запуск таймаута при печатании + сброс при смене чата
 
-  console.log('screen --> ChatForm');
+  console.log("screen --> ChatForm");
 
   // юзеффект держит в фокусе инпут ввода сообщений
   useEffect(() => {
@@ -32,14 +31,15 @@ const ChatForm: FC = () => {
   }, [message]);
 
   // юзеффект изменения месседжа
+  // + чистит при смене юзера сообщение
   useEffect(() => {
     if (editingMessageInfo) {
       const msg = editingMessageInfo.selectedMessage.data().message;
       setMessage(msg);
     } else {
-      setMessage('');
+      setMessage("");
     }
-  }, [editingMessageInfo, setMessage]);
+  }, [chatUID, editingMessageInfo, setMessage]);
 
   const handleCancelEditingMessage = () => {
     resetEditingMessage();
@@ -52,7 +52,7 @@ const ChatForm: FC = () => {
   const handleManageSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (message.trim() === '') {
+    if (message.trim() === "") {
       return;
     }
 
@@ -67,7 +67,7 @@ const ChatForm: FC = () => {
       resetEditingMessage();
     } else {
       handleSendMessage(message, chatUID, currentUserUID, userUID);
-      setMessage('');
+      setMessage("");
     }
   };
 
@@ -120,7 +120,7 @@ const ChatForm: FC = () => {
           </button>
         </form>
         <FileInput />
-        <Emoji setMessage={setMessage} />
+        <Emoji />
       </div>
     </div>
   );

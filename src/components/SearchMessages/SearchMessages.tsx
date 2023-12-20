@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from "react";
 import {
   DocumentData,
   collection,
@@ -6,21 +6,19 @@ import {
   onSnapshot,
   query,
   where,
-} from 'firebase/firestore';
+} from "firebase/firestore";
 
-import AvatarProfile from '@/components/AvatarProfile/AvatarProfile';
-import Search from '@/components/Inputs/Search/Search';
-import { db } from '@/myfirebase/config';
-import useChatStore from '@/zustand/store';
-import formatTime from '@/utils/formatTime';
-import { ISearchMessagesProps } from '@/interfaces/ISearchMessagesProps';
-// import sprite from '@assets/sprite.svg';
-// import sprite from '/sprite.svg';
+import AvatarProfile from "@/components/AvatarProfile/AvatarProfile";
+import Search from "@/components/Inputs/Search/Search";
+import { db } from "@/myfirebase/config";
+import useChatStore from "@/zustand/store";
+import formatTimeSearchMsg from "@/utils/formatTimeSearchMsg";
+import { ISearchMessagesProps } from "@/interfaces/ISearchMessagesProps";
 
 const SearchMessages: FC<ISearchMessagesProps> = ({
   setIsShowSearchMessages,
 }) => {
-  const [searchValue, setSearchValue] = useState('');
+  const [searchValue, setSearchValue] = useState("");
   const [searchMessages, setSearchMessages] = useState<DocumentData[] | null>(
     null
   );
@@ -28,8 +26,8 @@ const SearchMessages: FC<ISearchMessagesProps> = ({
     null
   );
 
-  const { chatUID, userUID } = useChatStore(state => state.currentChatInfo);
-  const { photoURL, displayName } = useChatStore(state => state.currentUser);
+  const { chatUID, userUID } = useChatStore((state) => state.currentChatInfo);
+  const { photoURL, displayName } = useChatStore((state) => state.currentUser);
 
   useEffect(() => {
     if (!searchValue) {
@@ -39,11 +37,11 @@ const SearchMessages: FC<ISearchMessagesProps> = ({
 
     const queryParams = query(
       collection(db, `chats/${chatUID}/messages`),
-      where('message', '>=', searchValue),
-      where('message', '<=', searchValue + '\uf8ff')
+      where("message", ">=", searchValue),
+      where("message", "<=", searchValue + "\uf8ff")
     );
 
-    const unsubSearchMessages = onSnapshot(queryParams, querySnapshot => {
+    const unsubSearchMessages = onSnapshot(queryParams, (querySnapshot) => {
       setSearchMessages(querySnapshot.docs);
     });
 
@@ -53,7 +51,9 @@ const SearchMessages: FC<ISearchMessagesProps> = ({
   }, [chatUID, searchValue]);
 
   useEffect(() => {
-    const unsubUserInfoData = onSnapshot(doc(db, 'users', userUID), doc => {
+    if (!userUID) return;
+
+    const unsubUserInfoData = onSnapshot(doc(db, "users", userUID), (doc) => {
       const data = doc.data();
       if (data) {
         setCurrentChatInfo(data);
@@ -75,15 +75,11 @@ const SearchMessages: FC<ISearchMessagesProps> = ({
     setIsShowSearchMessages(false);
   };
 
-  // const handleClickSearchMessage = () => {
-  // //
-  // };
-
   return (
     <div>
-      <div className="flex justify-around items-center">
+      <div className="flex justify-around items-center gap-1">
         <button
-          className="flex justify-center items-center h-10 w-10 bg-transparent transition-all duration-300 hover:bg-zinc-400/30 hover:dark:bg-zinc-100/10 rounded-full cursor-pointer"
+          className="flex justify-center items-center h-9 w-10 bg-transparent transition-all duration-300 hover:bg-zinc-400/30 hover:dark:bg-zinc-100/10 rounded-full cursor-pointer"
           onClick={handleClickCloseSearchMessage}
         >
           <svg
@@ -105,7 +101,7 @@ const SearchMessages: FC<ISearchMessagesProps> = ({
         <ul className="flex flex-col justify-center gap-2">
           {searchMessages.length === 0 && (
             <p className="text-zinc-600 dark:text-white">
-              Not found messages, change search value
+              {"Not found messages, change search value"}
             </p>
           )}
           {searchMessages.map((msg) => {
@@ -137,7 +133,7 @@ const SearchMessages: FC<ISearchMessagesProps> = ({
                   </p>
                   <p className="text-zinc-600 dark:text-white">
                     {msg.data().date &&
-                      formatTime(msg.data().date.toDate().toString())}
+                      formatTimeSearchMsg(msg.data().date.toDate().toString())}
                   </p>
                 </div>
               </li>

@@ -1,9 +1,13 @@
-import React from "react";
+import { FC, Suspense, lazy } from "react";
 
-import Auth from "@/components/Auth/Auth";
+const Auth = lazy(() => import("@/components/Auth/Auth"));
 
-const AuthPage = () => {
-  return <Auth />;
+const AuthPage: FC = () => {
+  return (
+    <Suspense>
+      <Auth />
+    </Suspense>
+  );
 };
 
 export default AuthPage;

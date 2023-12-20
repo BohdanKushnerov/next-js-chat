@@ -2,7 +2,6 @@ import { initializeApp } from "firebase/app";
 import {
   browserLocalPersistence,
   getAuth,
-  onAuthStateChanged,
   setPersistence,
 } from "firebase/auth";
 import { getDatabase } from "firebase/database";
@@ -20,8 +19,6 @@ const firebaseConfig = {
   databaseURL: process.env.NEXT_PUBLIC_DB_URL,
 };
 
-// console.log("firebaseConfig", firebaseConfig);
-
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
@@ -29,16 +26,5 @@ const database = getDatabase(app);
 const storage = getStorage(app, `gs://react-web-messenger-dc6c4.appspot.com`);
 
 setPersistence(auth, browserLocalPersistence);
-
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    // Пользователь уже вошел в систему. Вы можете использовать 'auth' объект.
-    console.log("Пользователь вошел в систему:", user);
-    console.log("auth", auth);
-  } else {
-    // Пользователь не вошел в систему.
-    console.log("Пользователь не вошел в систему.");
-  }
-});
 
 export { auth, db, database, storage };
