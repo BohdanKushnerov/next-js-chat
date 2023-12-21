@@ -20,9 +20,14 @@ const handleSubmitVerifyCode = async (
       console.log("userCredential", userCredential);
       if (userCredential) {
         if (userCredential.user.displayName) {
-          router.push('/')
+          console.log(
+            "userCredential.user.displayName",
+            userCredential.user.displayName
+          );
+          router.push("/");
           return;
         } else {
+          console.log("setStep");
           setStep("Step 3/3");
         }
       }

@@ -27,7 +27,10 @@ const Auth = () => {
 
   console.log("Auth");
 
+  console.log("step", step);
+
   const updateCurrentUser = useChatStore((state) => state.updateCurrentUser);
+
   const handleSubmitPhone = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
 

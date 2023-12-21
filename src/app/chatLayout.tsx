@@ -1,50 +1,35 @@
 "use client";
+
 import React, { useEffect, useRef, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
-import { onDisconnect, ref, set } from "firebase/database";
-import { doc, getDoc } from "firebase/firestore";
+import { usePathname } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import { Transition } from "react-transition-group";
 
 import Sidebar from "@/components/Sidebar/Sidebar";
-import { auth, database, db } from "@/myfirebase/config";
 import useChatStore from "@/zustand/store";
-import handleSelectChat from "@/utils/handleSelectChat";
+import useIsRedirectToCurrentChat from "@/hooks/useIsRedirectToCurrentChat";
+import useOnAuthStateChanged from "@/hooks/useOnAuthStateChanged";
+import useIsOnlineMyStatus from "@/hooks/useIsOnlineMyStatus";
+import useWindowSize from "@/hooks/useWindowSize";
 import { AppScreenType } from "@/types/AppScreenType";
-import { ChatListItemType } from "@/types/ChatListItemType";
-import { CurrentChatInfo } from "@/types/CurrentChatInfo";
 import "@i18n";
 
-// const [windowHeight, setWindowHeight] = useState(() => window.innerHeight);
-
-// const [screen, setScreen] = useState<AppScreenType>(() => {
-//   if (window.innerWidth <= 640) {
-//     return window.location.pathname === "/react-web-messenger"
-//       ? "Sidebar"
-//       : "Chat";
-//   } else {
-//     return "FullScreen";
-//   }
-// });
-
 const ChatLayout = ({ children }: { children: React.ReactNode }) => {
-  const [windowHeight, setWindowHeight] = useState(0);
   const [screen, setScreen] = useState<AppScreenType>("FullScreen");
   const nodeRefSidebar = useRef(null);
   const nodeRefChat = useRef(null);
-  const router = useRouter();
   const pathname = usePathname();
   const { t } = useTranslation();
 
   const currentUserUID = useChatStore((state) => state.currentUser.uid);
-  const updateCurrentChatInfo = useChatStore(
-    (state) => state.updateCurrentChatInfo
-  );
   const isLoggedIn = useChatStore((state) => state.isLoggedIn);
-  const updateCurrentUser = useChatStore((state) => state.updateCurrentUser);
 
-  console.log("screen --> =====Layout-Layout=====");
-  console.log("screen ============== AppScreenType", screen);
+  const windowHeight = useWindowSize(pathname, setScreen); // size window + resize window
+  useOnAuthStateChanged(); // isAuth
+  useIsRedirectToCurrentChat(currentUserUID); // isRedirectToCurrentChat
+  useIsOnlineMyStatus(currentUserUID); // update online/offline status in realtime database
+
+  console.log("screen --> AppScreenType", screen);
 
   useEffect(() => {
     if (!localStorage.theme) {
@@ -59,19 +44,6 @@ const ChatLayout = ({ children }: { children: React.ReactNode }) => {
       localStorage.theme === "dark"
     );
   }, []);
-
-  useEffect(() => {
-    const unsub = auth.onAuthStateChanged((authUser) => {
-      if (authUser) {
-        updateCurrentUser(authUser);
-      } else {
-        updateCurrentUser(null);
-        router.push("/auth");
-      }
-    });
-
-    return () => unsub();
-  }, [router, updateCurrentUser]);
 
   // requestPermission
   useEffect(() => {
@@ -90,29 +62,6 @@ const ChatLayout = ({ children }: { children: React.ReactNode }) => {
     requestPermission();
   }, []);
 
-  // resize window
-  useEffect(() => {
-    if (!windowHeight) {
-      setWindowHeight(window.innerHeight);
-    }
-
-    const handleResize = () => {
-      setWindowHeight(window.innerHeight);
-
-      if (window.innerWidth <= 640) {
-        setScreen(pathname === "/" ? "Sidebar" : "Chat");
-      } else {
-        setScreen("FullScreen");
-      }
-    };
-
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, [pathname, windowHeight]);
-
   useEffect(() => {
     if (window.innerWidth <= 640) {
       if (pathname === "/") {
@@ -124,66 +73,6 @@ const ChatLayout = ({ children }: { children: React.ReactNode }) => {
       setScreen("FullScreen");
     }
   }, [pathname]);
-
-  // isRedirectToCurrentChat
-  useEffect(() => {
-    async function isRedirectToCurrentChat(
-      currentUserUID: string | null,
-      handleSelectChat: (
-        chat: ChatListItemType,
-        updateCurrentChatInfo: (chat: ChatListItemType) => void
-      ) => void,
-      updateCurrentChatInfo: (chat: CurrentChatInfo) => void
-    ) {
-      const combinedUsersChatUID = localStorage.getItem("currentChatId");
-
-      if (combinedUsersChatUID && currentUserUID) {
-        const res = await getDoc(doc(db, "userChats", currentUserUID));
-
-        const chatItem: ChatListItemType = [
-          combinedUsersChatUID,
-          {
-            lastMessage: res.data()?.[combinedUsersChatUID].lastMessage,
-            senderUserID: res.data()?.[combinedUsersChatUID].senderUserID,
-            userUID: res.data()?.[combinedUsersChatUID].userUID,
-          },
-        ];
-
-        handleSelectChat(chatItem, updateCurrentChatInfo);
-        // navigate(combinedUsersChatUID);
-        router.push(combinedUsersChatUID);
-      }
-    }
-
-    isRedirectToCurrentChat(
-      currentUserUID,
-      handleSelectChat,
-      updateCurrentChatInfo
-    );
-  }, [currentUserUID, router, updateCurrentChatInfo]);
-
-  // update online/offline status in realtime database
-  useEffect(() => {
-    if (currentUserUID) {
-      const dbRef = ref(database, "status/" + currentUserUID);
-
-      // Устанавливаем онлайн-статус при входе
-      set(dbRef, true);
-
-      // Устанавливаем обработчик отключения
-      const disconnectRef = onDisconnect(dbRef);
-
-      // Устанавливаем офлайн-статус при отключении
-      disconnectRef.set(false);
-
-      return () => {
-        // Очищаем обработчик отключения при размонтировании компонента
-        disconnectRef.cancel();
-        // Устанавливаем офлайн-статус при размонтировании компонента
-        set(dbRef, false);
-      };
-    }
-  }, [currentUserUID]);
 
   return (
     <main>

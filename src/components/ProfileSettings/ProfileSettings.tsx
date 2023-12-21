@@ -76,7 +76,7 @@ const ProfileSettings: FC = () => {
       {(state) => (
         <div
           ref={nodeRefProfileSettings}
-          className={`absolute top-0 left-0 w-full transform origin-top-left transition-transform 
+          className={`absolute top-0 left-0 p-1 w-full transform origin-top-left transition-transform 
                   ${state === "exited" ? "hidden" : ""}
                   ${
                     state === "entered"

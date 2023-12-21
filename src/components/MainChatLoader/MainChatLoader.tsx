@@ -1,17 +1,19 @@
-import { FC } from 'react';
-import RingLoader from 'react-spinners/RingLoader';
+"use client";
 
-import useChatStore from '@/zustand/store';
+import { FC } from "react";
+import RingLoader from "react-spinners/RingLoader";
+
+import useChatStore from "@/zustand/store";
 
 const MainChatLoader: FC = () => {
-  const isLoggedIn = useChatStore(state => state.isLoggedIn);
+  const isLoggedIn = useChatStore((state) => state.isLoggedIn);
 
   return (
     isLoggedIn === null && (
       <>
         <div className="flex flex-col justify-center items-center bg-loader-bcg bg-cover bg-bottom h-screen w-full">
           <RingLoader
-            color={'rgb(180 83 9)'}
+            color={"rgb(180 83 9)"}
             size={250}
             aria-label="Loading Spinner"
             data-testid="loader"
@@ -23,6 +25,6 @@ const MainChatLoader: FC = () => {
       </>
     )
   );
-}
+};
 
 export default MainChatLoader;
