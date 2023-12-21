@@ -1,4 +1,5 @@
 import React, { FC, useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 
 import FileInput from "@/components/Inputs/FileInput/FileInput";
 import Emoji from "@/components/Emoji/Emoji";
@@ -7,9 +8,11 @@ import useBeforeUnloadToStopTyping from "@/hooks/useBeforeUnloadToStopTyping";
 import useTyping from "@/hooks/useTyping";
 import handleUpdateEditMessage from "@/utils/handleUpdateEditMessage";
 import handleSendMessage from "@/utils/handleSendMessage";
+import "@i18n";
 
 const ChatForm: FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
+  const { t } = useTranslation("translation", { keyPrefix: "ChatForm" });
 
   const message = useChatStore((state) => state.message);
   const setMessage = useChatStore((state) => state.setMessage);
@@ -83,7 +86,7 @@ const ChatForm: FC = () => {
               <p className="flex text-violet-500">Edit message</p>
               <p className="text-white">
                 {editingMessageInfo.selectedMessage.data().message ||
-                  "empty message... =)"}
+                  t("EmptyMessage")}
               </p>
             </div>
             <button onClick={handleCancelEditingMessage}>
@@ -104,7 +107,7 @@ const ChatForm: FC = () => {
             autoFocus
             className="w-full h-10 py-1 pl-10 pr-14 rounded-3xl bg-zinc-300 dark:bg-mySeacrhBcg text-black dark:text-white placeholder:text-zinc-900 placeholder:dark:text-zinc-400 border-2 border-transparent outline-none focus:border-solid focus:dark:border-cyan-500"
             type="text"
-            placeholder="Write your message..."
+            placeholder={t("ChatInputPlaceholder")}
             ref={inputRef}
             value={message}
             onChange={handleChangeMessage}

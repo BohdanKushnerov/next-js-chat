@@ -1,17 +1,19 @@
 "use client";
+import React, { useEffect, useRef, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { onDisconnect, ref, set } from "firebase/database";
+import { doc, getDoc } from "firebase/firestore";
+import { useTranslation } from "react-i18next";
+import { Transition } from "react-transition-group";
 
 import Sidebar from "@/components/Sidebar/Sidebar";
 import { auth, database, db } from "@/myfirebase/config";
+import useChatStore from "@/zustand/store";
+import handleSelectChat from "@/utils/handleSelectChat";
 import { AppScreenType } from "@/types/AppScreenType";
 import { ChatListItemType } from "@/types/ChatListItemType";
 import { CurrentChatInfo } from "@/types/CurrentChatInfo";
-import handleSelectChat from "@/utils/handleSelectChat";
-import useChatStore from "@/zustand/store";
-import { onDisconnect, ref, set } from "firebase/database";
-import { doc, getDoc } from "firebase/firestore";
-import { usePathname, useRouter } from "next/navigation";
-import React, { useEffect, useRef, useState } from "react";
-import { Transition } from "react-transition-group";
+import "@i18n";
 
 // const [windowHeight, setWindowHeight] = useState(() => window.innerHeight);
 
@@ -32,6 +34,7 @@ const ChatLayout = ({ children }: { children: React.ReactNode }) => {
   const nodeRefChat = useRef(null);
   const router = useRouter();
   const pathname = usePathname();
+  const { t } = useTranslation();
 
   const currentUserUID = useChatStore((state) => state.currentUser.uid);
   const updateCurrentChatInfo = useChatStore(
@@ -108,7 +111,7 @@ const ChatLayout = ({ children }: { children: React.ReactNode }) => {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, [pathname]);
+  }, [pathname, windowHeight]);
 
   useEffect(() => {
     if (window.innerWidth <= 640) {
@@ -249,7 +252,7 @@ const ChatLayout = ({ children }: { children: React.ReactNode }) => {
               {screen === "FullScreen" && pathname === "/" && (
                 <div className="relative h-full w-screen xl:flex xl:flex-col xl:items-center bg-transparent overflow-hidden">
                   <h2 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-4 bg-gray-700 rounded-xl text-center text-white font-black">
-                    Select or search user who you would to start messaging
+                    {t("EmptyChatNofify")}
                   </h2>
                 </div>
               )}

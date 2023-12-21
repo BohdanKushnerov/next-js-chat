@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, FC } from 'react';
+import { useEffect, useState, useRef, FC } from "react";
 import {
   DocumentData,
   collection,
@@ -8,19 +8,19 @@ import {
   orderBy,
   query,
   updateDoc,
-} from 'firebase/firestore';
-import { deleteObject, ref } from 'firebase/storage';
-import { Scrollbars } from 'react-custom-scrollbars-2';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { toast } from 'react-toastify';
+} from "firebase/firestore";
+import { deleteObject, ref } from "firebase/storage";
+import { Scrollbars } from "react-custom-scrollbars-2";
+import { useTranslation } from "react-i18next";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import { toast } from "react-toastify";
 
-import MessageItem from '@/components/MessageItem/MessageItem';
-import MessageContextMenuModal from '@/components/Modals/ModalMessageContextMenu/ModalMessageContextMenu';
-import { db, storage } from '@/myfirebase/config';
-import useChatStore from '@/zustand/store';
-import formatDateForGroupMessages from '@/utils/formatDateForGroupMessages';
-// import sprite from '@assets/sprite.svg'; 
-// import sprite from '/sprite.svg'; 
+import MessageItem from "@/components/MessageItem/MessageItem";
+import MessageContextMenuModal from "@/components/Modals/ModalMessageContextMenu/ModalMessageContextMenu";
+import { db, storage } from "@/myfirebase/config";
+import useChatStore from "@/zustand/store";
+import formatDateForGroupMessages from "@/utils/formatDateForGroupMessages";
+import "@i18n";
 
 const MessageList: FC = () => {
   const [messages, setMessages] = useState<DocumentData[] | null>(null);
@@ -34,19 +34,18 @@ const MessageList: FC = () => {
   const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
   const scrollbarsRef = useRef<Scrollbars>(null);
   const msgListRef = useRef(null);
+  const { t } = useTranslation();
 
-  const currentUserUID = useChatStore(state => state.currentUser.uid);
-  const { chatUID, userUID } = useChatStore(state => state.currentChatInfo);
+  const currentUserUID = useChatStore((state) => state.currentUser.uid);
+  const { chatUID, userUID } = useChatStore((state) => state.currentChatInfo);
   const updateEditingMessage = useChatStore(
-    state => state.updateEditingMessage
+    (state) => state.updateEditingMessage
   );
 
   // console.log('screen --> MessageList');
 
-  // console.log('groupedMessages', groupedMessages);
-
   const selectedDocDataMessage = messages?.find(
-    message => message.id === selectedItemIdForOpenModal
+    (message) => message.id === selectedItemIdForOpenModal
   );
 
   useEffect(() => {
@@ -59,7 +58,7 @@ const MessageList: FC = () => {
         // console.log('111', messageData);
         if (messageData && messageData.date) {
           const date = messageData.date.toDate(); // Преобразуем _Timestamp в объект Date
-          const dateString = date.toISOString().split('T')[0]; // Получаем строку в формате 'YYYY-MM-DD'
+          const dateString = date.toISOString().split("T")[0]; // Получаем строку в формате 'YYYY-MM-DD'
 
           acc[dateString] = acc[dateString] || [];
           // acc[dateString].push(messageData);
@@ -77,22 +76,22 @@ const MessageList: FC = () => {
   useEffect(() => {
     if (chatUID === null) return;
 
-    localStorage.setItem('currentChatId', chatUID);
+    localStorage.setItem("currentChatId", chatUID);
 
     const queryParams = query(
       collection(db, `chats/${chatUID}/messages`),
-      orderBy('date', 'asc')
+      orderBy("date", "asc")
     );
 
-    onSnapshot(queryParams, snapshot => {
+    onSnapshot(queryParams, (snapshot) => {
       // if (!snapshot.empty) {
       //   if(!messages) {
       //     console.log('1111111111111111111111111111111111111111111111')
       //     setMessages(snapshot.docs);
       //   }
       // }
-      snapshot.docChanges().forEach(change => {
-        if (change.type === 'added') {
+      snapshot.docChanges().forEach((change) => {
+        if (change.type === "added") {
           // console.log('New mes: ', change.doc.data());
           // if(messages) {
           //   setMessages([change.doc]);
@@ -110,22 +109,22 @@ const MessageList: FC = () => {
             // });
           }
         }
-        if (change.type === 'modified') {
+        if (change.type === "modified") {
           // console.log('Modified mes: ', change.doc.data());
         }
-        if (change.type === 'removed') {
+        if (change.type === "removed") {
           // console.log('Removed mes: ', change.doc.data());
         }
       });
     });
 
-    const unsubChatMessages = onSnapshot(queryParams, querySnapshot => {
+    const unsubChatMessages = onSnapshot(queryParams, (querySnapshot) => {
       setMessages(querySnapshot.docs);
     });
 
     return () => {
       unsubChatMessages();
-      localStorage.removeItem('currentChatId');
+      localStorage.removeItem("currentChatId");
     };
   }, [chatUID, currentUserUID]);
 
@@ -162,10 +161,7 @@ const MessageList: FC = () => {
     setIsButtonVisible(isNearBottom);
   };
 
-  const handleClickRigthButtonMessage = (
-    id: string,
-    e?: React.MouseEvent
-  ) => {
+  const handleClickRigthButtonMessage = (id: string, e?: React.MouseEvent) => {
     if (e) {
       e.preventDefault();
 
@@ -175,8 +171,8 @@ const MessageList: FC = () => {
       const containerTop = rect?.top;
       const containerLeft = rect?.left;
 
-      const menuWidth = 224;
-      const menuHeight = 224;
+      const menuWidth = 240;
+      const menuHeight = 240;
 
       // тут получаеться есть и сайдбар и тут идет подчет позиции контекстного меню
       if (containerTop && containerLeft && chatContainerEl) {
@@ -239,18 +235,18 @@ const MessageList: FC = () => {
             const desertRef = ref(storage, el.url);
 
             return deleteObject(desertRef).then(() =>
-              console.log('delete URL success')
+              console.log("delete URL success")
             );
           }
         );
 
         await Promise.all(promisesArrOfURLs).then(() =>
-          console.log('delete All URLs success')
+          console.log("delete All URLs success")
         );
       }
 
       await deleteDoc(
-        doc(db, 'chats', chatUID, 'messages', selectedDocDataMessage.id)
+        doc(db, "chats", chatUID, "messages", selectedDocDataMessage.id)
       ).then(() => {
         handleCloseModal();
       });
@@ -259,8 +255,7 @@ const MessageList: FC = () => {
       if (messages.length > 1) {
         // тут в ифе по идее условие если последнее сообщение здесь
         if (selectedDocDataMessage.id === messages[messages.length - 1].id) {
-          const lastFiles =
-            messages[messages.length - 2].data()?.file;
+          const lastFiles = messages[messages.length - 2].data()?.file;
 
           const lastMessage = lastFiles
             ? `${String.fromCodePoint(128206)} ${lastFiles.length} file(s) ${
@@ -274,43 +269,43 @@ const MessageList: FC = () => {
           const lastDateMessage = messages[messages.length - 2].data().date;
 
           // здесь надо переписывать последнее сообщение мне и напарнику после удаления
-          await updateDoc(doc(db, 'userChats', currentUserUID), {
-            [chatUID + '.lastMessage']: lastMessage,
-            [chatUID + '.senderUserID']: senderUserIDMessage,
-            [chatUID + '.date']: lastDateMessage,
+          await updateDoc(doc(db, "userChats", currentUserUID), {
+            [chatUID + ".lastMessage"]: lastMessage,
+            [chatUID + ".senderUserID"]: senderUserIDMessage,
+            [chatUID + ".date"]: lastDateMessage,
           });
 
           // =====================================================
-          await updateDoc(doc(db, 'userChats', userUID), {
-            [chatUID + '.lastMessage']: lastMessage,
-            [chatUID + '.senderUserID']: senderUserIDMessage,
-            [chatUID + '.date']: lastDateMessage,
+          await updateDoc(doc(db, "userChats", userUID), {
+            [chatUID + ".lastMessage"]: lastMessage,
+            [chatUID + ".senderUserID"]: senderUserIDMessage,
+            [chatUID + ".date"]: lastDateMessage,
           });
         }
       } else {
         // пустую строку с пробелом чтобы не падала ошибка
-        await updateDoc(doc(db, 'userChats', currentUserUID), {
-          [chatUID + '.lastMessage']: ' ',
-          [chatUID + '.senderUserID']: ' ',
-          [chatUID + '.date']: ' ',
+        await updateDoc(doc(db, "userChats", currentUserUID), {
+          [chatUID + ".lastMessage"]: " ",
+          [chatUID + ".senderUserID"]: " ",
+          [chatUID + ".date"]: " ",
         });
 
         // =====================================================
-        await updateDoc(doc(db, 'userChats', userUID), {
-          [chatUID + '.lastMessage']: ' ',
-          [chatUID + '.senderUserID']: ' ',
-          [chatUID + '.date']: ' ',
+        await updateDoc(doc(db, "userChats", userUID), {
+          [chatUID + ".lastMessage"]: " ",
+          [chatUID + ".senderUserID"]: " ",
+          [chatUID + ".date"]: " ",
         });
       }
 
-      toast.success('Message successfully deleted!')
+      toast.success("Message successfully deleted!");
     }
   };
 
   const handleChooseEditMessage = () => {
     if (chatUID && messages && selectedItemIdForOpenModal !== null) {
       const selectedMessage: DocumentData | undefined = messages.find(
-        message => message.id === selectedItemIdForOpenModal
+        (message) => message.id === selectedItemIdForOpenModal
       );
 
       if (selectedMessage) {
@@ -329,7 +324,7 @@ const MessageList: FC = () => {
   };
 
   const handleSuccessClickCopyTextMsg = () => {
-    toast.success('Copied to Clipboard!');
+    toast.success("Copied to Clipboard!");
     handleCloseModal();
   };
 
@@ -341,37 +336,39 @@ const MessageList: FC = () => {
           autoHide
           style={{
             top: 56,
-            height: 'calc(100% - 56px - 96px)',
+            height: "calc(100% - 56px - 96px)",
           }}
           onScroll={handleScroll}
         >
           <ul ref={msgListRef} className="flex flex-col px-6 gap-2">
             {groupedMessages &&
-              Object.keys(groupedMessages).map(date => (
+              Object.keys(groupedMessages).map((date) => (
                 <li className="relative flex flex-col gap-2" key={date}>
                   <div className="flex justify-center sticky top-1 z-10 ">
                     <p className="px-2 py-0.5 w-min-0 whitespace-no-wrap rounded-xl bg-zinc-200/40 text-green-100 text-center">
-                      {formatDateForGroupMessages(date)}
+                      {formatDateForGroupMessages(date, t)}
                     </p>
                   </div>
-                  {groupedMessages[date].map((message: DocumentData, index: number) => {
-                    const currentItem =
-                      selectedItemIdForOpenModal === message.id;
+                  {groupedMessages[date].map(
+                    (message: DocumentData, index: number) => {
+                      const currentItem =
+                        selectedItemIdForOpenModal === message.id;
 
-                    return (
-                      <div
-                        key={index}
-                        className={`flex justify-center p-0.5 rounded-xl ${
-                          currentItem && "bg-currentContextMenuMessage"
-                        }`}
-                        onContextMenu={(e) =>
-                          handleClickRigthButtonMessage(message.id, e)
-                        }
-                      >
-                        <MessageItem msg={message} />
-                      </div>
-                    );
-                  })}
+                      return (
+                        <div
+                          key={index}
+                          className={`flex justify-center p-0.5 rounded-xl ${
+                            currentItem && "bg-currentContextMenuMessage"
+                          }`}
+                          onContextMenu={(e) =>
+                            handleClickRigthButtonMessage(message.id, e)
+                          }
+                        >
+                          <MessageItem msg={message} />
+                        </div>
+                      );
+                    }
+                  )}
                 </li>
               ))}
           </ul>
@@ -400,7 +397,7 @@ const MessageList: FC = () => {
           closeModal={handleCloseModal}
           modalPosition={modalPosition}
         >
-          <div className="w-56 h-56 p-2 bg-myBlackBcg rounded-3xl pointer-events-auto">
+          <div className="w-60 h-60 p-1 bg-myBlackBcg rounded-3xl pointer-events-auto">
             {selectedDocDataMessage?.data()?.senderUserID ===
               currentUserUID && (
               <button
@@ -408,9 +405,9 @@ const MessageList: FC = () => {
                 onClick={handleChooseEditMessage}
               >
                 <svg width={20} height={20}>
-                  <use href={"/sprite.svg" + '#icon-pencil'} fill="#FFFFFF" />
+                  <use href={"/sprite.svg" + "#icon-pencil"} fill="#FFFFFF" />
                 </svg>
-                <span>EDIT</span>
+                <span>{t("ContextMenu.Edit")}</span>
               </button>
             )}
 
@@ -421,9 +418,9 @@ const MessageList: FC = () => {
               >
                 <button className="flex items-center justify-between w-full px-8 py-2 text-white hover:cursor-pointer hover:bg-hoverGray hover:rounded-md">
                   <svg width={20} height={20}>
-                    <use href={"/sprite.svg" + '#icon-copy'} fill="#FFFFFF" />
+                    <use href={"/sprite.svg" + "#icon-copy"} fill="#FFFFFF" />
                   </svg>
-                  <span>COPY TEXT</span>
+                  <span>{t("ContextMenu.Copy")}</span>
                 </button>
               </CopyToClipboard>
             )}
@@ -433,9 +430,12 @@ const MessageList: FC = () => {
               onClick={handleDeleteMessage}
             >
               <svg width={20} height={20}>
-                <use href={"/sprite.svg" + '#icon-delete-button'} fill="#FFFFFF" />
+                <use
+                  href={"/sprite.svg" + "#icon-delete-button"}
+                  fill="#FFFFFF"
+                />
               </svg>
-              <span>DELETE</span>
+              <span>{t("ContextMenu.Delete")}</span>
             </button>
           </div>
         </MessageContextMenuModal>

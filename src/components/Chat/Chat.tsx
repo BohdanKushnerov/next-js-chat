@@ -1,4 +1,5 @@
 import { FC, Suspense, lazy, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import MessageList from "@/components/MessageList/MessageList";
 import ChatHeader from "../ChatHeader/ChatHeader";
@@ -7,9 +8,11 @@ const SearchMessages = lazy(
   () => import("@/components/SearchMessages/SearchMessages")
 );
 import useChatStore from "@/zustand/store";
+import "@i18n";
 
 const Chat: FC = () => {
   const [isShowSearchMessages, setIsShowSearchMessages] = useState(false);
+  const { t } = useTranslation();
 
   const { chatUID } = useChatStore((state) => state.currentChatInfo);
 
@@ -28,7 +31,7 @@ const Chat: FC = () => {
           </>
         ) : (
           <h2 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-4 bg-gray-700 rounded-xl text-center text-white font-black">
-            Select or search user who you would to start messaging
+            {t("EmptyChatNofify")}
           </h2>
         )}
       </div>

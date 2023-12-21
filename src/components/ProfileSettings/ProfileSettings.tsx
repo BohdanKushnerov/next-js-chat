@@ -2,6 +2,7 @@ import { FC, Suspense, lazy, useRef, useState } from "react";
 import Avatar from "react-avatar";
 import Image from "next/image";
 import { Transition } from "react-transition-group";
+import { useTranslation } from "react-i18next";
 
 import ButtonArrow from "../Buttons/ButtonArrow/ButtonArrow";
 const ProfileSettingsModal = lazy(
@@ -11,6 +12,7 @@ import { auth } from "@/myfirebase/config";
 import useChatStore from "@/zustand/store";
 import useStartTransition from "@/hooks/useStartTransition";
 import handleClickChangeDisplayName from "@/utils/handleClickChangeDisplayName";
+import "@i18n";
 
 const ProfileSettings: FC = () => {
   const [newDisplayName, setNewDisplayName] = useState(
@@ -20,6 +22,10 @@ const ProfileSettings: FC = () => {
 
   const nodeRefProfileSettings = useRef(null);
   const photoProfileInputRef = useRef<HTMLInputElement>(null);
+  const { t } = useTranslation("translation", {
+    keyPrefix: "ProfileSettings",
+  });
+
   const startTransition = useStartTransition();
 
   const { uid, displayName } = useChatStore((state) => state.currentUser);
@@ -132,7 +138,7 @@ const ProfileSettings: FC = () => {
               )}
             </div>
             <div className="flex gap-2 justify-center items-center text-white">
-              <p className="text-black dark:text-white">Phone: </p>
+              <p className="text-black dark:text-white">{t("Phone")}</p>
               <p className="py-2 px-4 h-10 rounded-3xl bg-mySeacrhBcg text-white text-center cursor-default">
                 {auth?.currentUser?.phoneNumber}
               </p>
@@ -147,7 +153,7 @@ const ProfileSettings: FC = () => {
                     onChange={handleChangeDisplayName}
                   />
                   <p className="text-center text-xs text-black dark:text-white">
-                    &#x2BB4; start change username and button will be enable
+                    &#x2BB4; {t("ChangeNameNotify")}
                     &#x2BB5;
                   </p>
                 </div>
@@ -155,8 +161,8 @@ const ProfileSettings: FC = () => {
                   className={`w-48 border-2 rounded-3xl ${
                     displayName === newDisplayName
                       ? "bg-transparent border-zinc-400 text-zinc-400"
-                      : "text-black bg-transparent border-black"
-                  } hover:shadow-mainShadow hover:bg-zinc-400 hover:dark:bg-gray-800 cursor-pointer`}
+                      : "text-white bg-transparent border-white"
+                  } hover:shadow-mainShadow hover:bg-zinc-400 hover:dark:bg-gray-600 cursor-pointer`}
                   onClick={() =>
                     uid !== null &&
                     handleClickChangeDisplayName(
@@ -167,7 +173,7 @@ const ProfileSettings: FC = () => {
                   }
                   disabled={displayName === newDisplayName}
                 >
-                  ChangeName
+                  {t("ChangeName")}
                 </button>
               </div>
             )}

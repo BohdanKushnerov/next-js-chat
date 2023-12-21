@@ -2,14 +2,16 @@ import { FC, useRef } from "react";
 import { signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { Transition } from "react-transition-group";
+import { useTranslation } from "react-i18next";
 
 import AvatarProfile from "@/components/AvatarProfile/AvatarProfile";
-// import LanguageSwitcher from '@/components/LanguageSwitcher/LanguageSwitcher';
+import LanguageSwitcher from "@/components/LanguageSwitcher/LanguageSwitcher";
 import Theme from "@/components/Theme/Theme";
 import ModalWindow from "../ModalWindow/ModalWindow";
 import { auth } from "@/myfirebase/config";
 import useChatStore from "@/zustand/store";
 import useStartTransition from "@/hooks/useStartTransition";
+import "@i18n";
 
 interface INavbarModal {
   handleToggleModal: () => void;
@@ -19,6 +21,9 @@ const NavbarModal: FC<INavbarModal> = ({ handleToggleModal }) => {
   const router = useRouter();
   const startTransition = useStartTransition();
   const nodeRefNavBar = useRef(null);
+  const { t } = useTranslation("translation", {
+    keyPrefix: "NavBar",
+  });
 
   const currentUser = useChatStore((state) => state.currentUser);
   const updateSidebarScreen = useChatStore(
@@ -74,17 +79,17 @@ const NavbarModal: FC<INavbarModal> = ({ handleToggleModal }) => {
                     className="px-2 py-1 border border-zinc-600 dark:border-zinc-500 rounded-full transition-all duration-300 hover:shadow-mainShadow hover:bg-zinc-400 hover:dark:bg-gray-800"
                     onClick={handleSignOut}
                   >
-                    SignOut
+                    {t("SignOut")}
                   </button>
                 </div>
                 <button
                   className="px-2 py-1 border border-zinc-600 dark:border-zinc-500 rounded-full text-black dark:text-white transition-all duration-300 hover:shadow-mainShadow hover:bg-zinc-400 hover:dark:bg-gray-800"
                   onClick={handleSettingsClick}
                 >
-                  ProfileSettings
+                  {t("ProfileSettings")}
                 </button>
                 <Theme />
-                {/* <LanguageSwitcher /> */}
+                <LanguageSwitcher />
               </div>
             </ModalWindow>
           </div>

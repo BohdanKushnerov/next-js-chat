@@ -34,7 +34,7 @@ const ChatHeader: FC<IChatHeaderProps> = ({ setIsShowSearchMessages }) => {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, [isMobileScreen]);
 
   const handleClickShowSearchMessages = () => {
     setIsShowSearchMessages(true);
@@ -42,7 +42,6 @@ const ChatHeader: FC<IChatHeaderProps> = ({ setIsShowSearchMessages }) => {
 
   const handleClickNavigateToSidebarScreen = () => {
     resetCurrentChatInfo();
-    // navigate("/");
     router.push("/");
   };
 

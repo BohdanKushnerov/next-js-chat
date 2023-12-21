@@ -7,6 +7,7 @@ import {
   query,
   where,
 } from "firebase/firestore";
+import { useTranslation } from "react-i18next";
 
 import AvatarProfile from "@/components/AvatarProfile/AvatarProfile";
 import Search from "@/components/Inputs/Search/Search";
@@ -14,6 +15,7 @@ import { db } from "@/myfirebase/config";
 import useChatStore from "@/zustand/store";
 import formatTimeSearchMsg from "@/utils/formatTimeSearchMsg";
 import { ISearchMessagesProps } from "@/interfaces/ISearchMessagesProps";
+import "@i18n";
 
 const SearchMessages: FC<ISearchMessagesProps> = ({
   setIsShowSearchMessages,
@@ -25,6 +27,7 @@ const SearchMessages: FC<ISearchMessagesProps> = ({
   const [currentChatInfo, setCurrentChatInfo] = useState<DocumentData | null>(
     null
   );
+  const { t } = useTranslation();
 
   const { chatUID, userUID } = useChatStore((state) => state.currentChatInfo);
   const { photoURL, displayName } = useChatStore((state) => state.currentUser);
@@ -94,15 +97,13 @@ const SearchMessages: FC<ISearchMessagesProps> = ({
         <Search
           value={searchValue}
           handleChange={handleChangeSearchMessage}
-          placeholderText="Enter text (case-sensitive)"
+          placeholderText={t("SearchMsgPlaceholder")}
         />
       </div>
       {searchMessages && (
         <ul className="flex flex-col justify-center gap-2">
           {searchMessages.length === 0 && (
-            <p className="text-zinc-600 dark:text-white">
-              {"Not found messages, change search value"}
-            </p>
+            <p className="text-zinc-600 dark:text-white">{t("NotFoundMsg")}</p>
           )}
           {searchMessages.map((msg) => {
             console.log(msg.data().senderUserID);

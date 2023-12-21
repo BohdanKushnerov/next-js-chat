@@ -10,11 +10,13 @@ import {
 import Image from "next/image";
 import { v4 as uuidv4 } from "uuid";
 import { Line } from "rc-progress";
+import { useTranslation } from "react-i18next";
 
+import { auth, db, storage } from "@/myfirebase/config";
 import ButtonClose from "@/components/Buttons/ButtonClose/ButtonClose";
 import ModalWindow from "../ModalWindow/ModalWindow";
 import useChatStore from "@/zustand/store";
-import { auth, db, storage } from "@/myfirebase/config";
+import "@i18n";
 
 interface IProfileSettingsModal {
   photoProfileInputRef: RefObject<HTMLInputElement>;
@@ -28,6 +30,9 @@ const ProfileSettingsModal: FC<IProfileSettingsModal> = ({
   const [profilePhotoUploadStatus, setProfilePhotoUploadStatus] = useState<
     number | null
   >(null);
+  const { t } = useTranslation("translation", {
+    keyPrefix: "ProfileSettings",
+  });
 
   const { uid, photoURL } = useChatStore((state) => state.currentUser);
   const updateCurrentUser = useChatStore((state) => state.updateCurrentUser);
@@ -133,16 +138,14 @@ const ProfileSettingsModal: FC<IProfileSettingsModal> = ({
             />
           )}
           <p className="w-80 text-center text-black dark:text-white text-xs">
-            {
-              "If you're satisfied, click the 'Change Profile Photo' button, or close the window and try a new photo"
-            }
+            {t("Modal.ChangeProfilePhotoPrompt")}
           </p>
           <button
             className="w-48 border-2 rounded-3xl text-black dark:text-white border-black dark:border-white transition-all duration-300 hover:shadow-mainShadow hover:bg-zinc-400 hover:dark:bg-gray-800 disabled:text-zinc-600"
             onClick={handleUpdateProfilePhoto}
             disabled={typeof profilePhotoUploadStatus === "number"}
           >
-            Change profile photo
+            {t("Modal.ChangeProfilePhoto")}
           </button>
 
           <div className="flex gap-4 items-center h-4">

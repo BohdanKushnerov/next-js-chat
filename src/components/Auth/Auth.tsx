@@ -5,20 +5,15 @@ import { ConfirmationResult, updateProfile } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { E164Number } from "libphonenumber-js";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 import MyPhoneInput from "../Inputs/MyPhoneInput/MyPhoneInput";
 import CodeInput from "../Inputs/CodeInput/CodeInput";
 import { auth, db } from "@/myfirebase/config";
-// import useChatStore from '@zustand/store';
+import useChatStore from "@/zustand/store";
 import handleSubmitVerifyCode from "./utils/handleSubmitVerifyCodeVerifyCode";
 import setUpRecaptcha from "./utils/setUpRecaptcha";
 import { AuthSteps } from "@/types/AuthSteps";
-import { useRouter } from "next/navigation";
-
-//==========
-// закоментированно ЗУСТАНД
-// await updateCurrentUser(user);
-//==========
 
 const Auth = () => {
   const [step, setStep] = useState<AuthSteps>("Step 1/3");
@@ -30,9 +25,9 @@ const Auth = () => {
     useState<ConfirmationResult | null>(null);
   const router = useRouter();
 
-  console.log('Auth')
+  console.log("Auth");
 
-  // const updateCurrentUser = useChatStore(state => state.updateCurrentUser);
+  const updateCurrentUser = useChatStore((state) => state.updateCurrentUser);
   const handleSubmitPhone = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
 
@@ -65,7 +60,7 @@ const Auth = () => {
 
       console.log("user handleUpdateProfile", user);
       // =================обновим юзеру имя в стейте============================
-      // await updateCurrentUser(user);
+      await updateCurrentUser(user);
       // =================создаем юзера для поиска пользователей=======================
       await setDoc(doc(db, "users", user.uid), {
         displayName: user.displayName,
@@ -77,7 +72,7 @@ const Auth = () => {
 
       // =================создаем обьект чаты нашего юзера которого мы только создали=======================
       await setDoc(doc(db, "userChats", user.uid), {});
-      
+
       router.push("/");
     } else {
       console.error("Пользователь не вошел в систему");
