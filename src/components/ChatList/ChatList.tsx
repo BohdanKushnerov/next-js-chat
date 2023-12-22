@@ -9,16 +9,13 @@ const ChatList: FC = () => {
 
   console.log("screen --> ChatList");
 
-  return (
-    <div>
-      <ul className="p-0 m-0">
-        {myUserChatList &&
-          myUserChatList.map((chatInfo: ChatListItemType) => (
-            <ChatListItem key={chatInfo[0]} chatInfo={chatInfo} />
-          ))}
-      </ul>
-    </div>
-  );
+  return myUserChatList ? (
+    <ul className="p-0 m-0">
+      {myUserChatList.map((chatInfo: ChatListItemType) => (
+        <ChatListItem key={chatInfo[0]} chatInfo={chatInfo} />
+      ))}
+    </ul>
+  ) : null;
 };
 
 export default ChatList;

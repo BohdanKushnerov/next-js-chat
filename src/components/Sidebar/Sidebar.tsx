@@ -5,7 +5,9 @@ import { Transition } from "react-transition-group";
 import ChatList from "@/components/ChatList/ChatList";
 import Navbar from "@/components/Navbar/Navbar";
 import SearchUsers from "@/components/SearchUsers/SearchUsers";
-import SearchChatList from "@/components/SearchChatList/SearchChatList";
+const SearchChatList = lazy(
+  () => import("@/components/SearchChatList/SearchChatList")
+);
 const ProfileSettings = lazy(
   () => import("@/components/ProfileSettings/ProfileSettings")
 );
@@ -15,6 +17,7 @@ const Sidebar: FC = () => {
   const nodeRefSidebarDefault = useRef(null);
 
   const sidebarScreen = useChatStore((state) => state.sidebarScreen);
+  const searchValue = useChatStore((state) => state.searchValue);
 
   console.log("screen --> Sidebar");
 
@@ -49,7 +52,11 @@ const Sidebar: FC = () => {
                 height: "calc(100% - 48px)",
               }}
             >
-              <SearchChatList />
+              {searchValue && (
+                <Suspense>
+                  <SearchChatList />
+                </Suspense>
+              )}
               <ChatList />
             </Scrollbars>
           </div>

@@ -1,4 +1,4 @@
-import type { Config } from 'tailwindcss'
+import type { Config } from "tailwindcss";
 
 const config: Config = {
   content: [
@@ -27,16 +27,10 @@ const config: Config = {
       maxWidth: {
         "320px": "320px",
       },
-      // backgroundImage: {
-      //   'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-      //   'gradient-conic':
-      //     'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
-      // },
       backgroundImage: {
-        // "main-bcg": "url('/src/assets/bcg.jpg')",
-        "main-bcg": "url('/bcg.jpg')",
-        "main-bcg2": "url('/bcg-dark.jpg')",
-        "loader-bcg": "url('/loader-img.jpg')",
+        "main-bcg": "url('/bcg.webp')",
+        "main-bcg2": "url('/bcg-dark.webp')",
+        "loader-bcg": "url('/loader.webp')",
       },
       backgroundColor: {
         mybcg: "#1F2025",
@@ -64,4 +58,4 @@ const config: Config = {
   plugins: [],
 };
 
-export default config
+export default config;
