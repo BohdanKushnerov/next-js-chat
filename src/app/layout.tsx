@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import ChatLayout from "./chatLayout";
 import "./globals.css";
@@ -20,6 +22,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <ChatLayout>{children}</ChatLayout>
+        <ToastContainer />
         <div id="modal-root"></div>
       </body>
     </html>

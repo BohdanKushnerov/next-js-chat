@@ -69,7 +69,7 @@ const MessageList: FC = () => {
         return acc;
       }, {});
 
-      console.log('grouped', grouped);
+      console.log("grouped", grouped);
       setGroupedMessages(grouped);
     }
   }, [messages]);
@@ -232,7 +232,6 @@ const MessageList: FC = () => {
       if (arrayURLsOfFiles) {
         const promisesArrOfURLs = arrayURLsOfFiles.map(
           (el: { url: string }) => {
-            // console.log(el.url);
             const desertRef = ref(storage, el.url);
 
             return deleteObject(desertRef).then(() =>
@@ -299,7 +298,7 @@ const MessageList: FC = () => {
         });
       }
 
-      toast.success("Message successfully deleted!");
+      toast.success(t("Toasts.DeleteMessageSuccess"));
     }
   };
 
@@ -325,7 +324,7 @@ const MessageList: FC = () => {
   };
 
   const handleSuccessClickCopyTextMsg = () => {
-    toast.success("Copied to Clipboard!");
+    toast.success(t("Toasts.CopyToClipboard"));
     handleCloseModal();
   };
 
