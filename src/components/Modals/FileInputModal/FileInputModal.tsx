@@ -235,6 +235,7 @@ const FileInputModal: FC<IFileInputModal> = ({
           >
             <div className="relative w-full h-10 sm:w-8/12 ">
               <input
+                autoFocus={true}
                 className="w-full h-full py-1 px-10 rounded-3xl bg-zinc-500 dark:bg-mySeacrhBcg text-white outline-none border-2 border-transparent focus:border-cyan-500"
                 type="text"
                 placeholder={t("ImageCaptionPlaceholder")}

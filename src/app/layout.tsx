@@ -5,6 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import ChatLayout from "./chatLayout";
 import "./globals.css";
+import MainChatLoader from "@/components/MainChatLoader/MainChatLoader";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,6 +24,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <ChatLayout>{children}</ChatLayout>
         <ToastContainer />
+        <MainChatLoader />
         <div id="modal-root"></div>
       </body>
     </html>

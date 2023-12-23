@@ -6,6 +6,8 @@ import Emoji from "@/components/Emoji/Emoji";
 import useChatStore from "@/zustand/store";
 import useBeforeUnloadToStopTyping from "@/hooks/useBeforeUnloadToStopTyping";
 import useTyping from "@/hooks/useTyping";
+import useEditingMessage from "@/hooks/useEditingMessage";
+import useClearMessagesOnChatChange from "@/hooks/useClearMessagesOnChatChange";
 import handleUpdateEditMessage from "@/utils/handleUpdateEditMessage";
 import handleSendMessage from "@/utils/handleSendMessage";
 import "@i18n";
@@ -23,26 +25,17 @@ const ChatForm: FC = () => {
     (state) => state.resetEditingMessage
   );
 
+  useEditingMessage(editingMessageInfo, setMessage); // юзеффект изменения месседжа
+  useClearMessagesOnChatChange(chatUID, setMessage); //  чистит при смене юзера сообщение
   useBeforeUnloadToStopTyping(); // еффект beforeunload чтобы прекратить состояние печати
   useTyping(message); // запуск таймаута при печатании + сброс при смене чата
 
   console.log("screen --> ChatForm");
 
   // юзеффект держит в фокусе инпут ввода сообщений
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, [message]);
-
-  // юзеффект изменения месседжа
-  // + чистит при смене юзера сообщение
-  useEffect(() => {
-    if (editingMessageInfo) {
-      const msg = editingMessageInfo.selectedMessage.data().message;
-      setMessage(msg);
-    } else {
-      setMessage("");
-    }
-  }, [chatUID, editingMessageInfo, setMessage]);
+  // useEffect(() => {
+  //   inputRef.current?.focus();
+  // });
 
   const handleCancelEditingMessage = () => {
     resetEditingMessage();
@@ -105,7 +98,7 @@ const ChatForm: FC = () => {
           onSubmit={handleManageSendMessage}
         >
           <input
-            autoFocus
+            autoFocus={true}
             className="w-full h-10 py-1 pl-10 pr-14 rounded-3xl bg-zinc-300 dark:bg-mySeacrhBcg text-black dark:text-white placeholder:text-zinc-900 placeholder:dark:text-zinc-400 border-2 border-transparent outline-none focus:border-solid focus:dark:border-cyan-500"
             type="text"
             placeholder={t("ChatForm.ChatInputPlaceholder")}

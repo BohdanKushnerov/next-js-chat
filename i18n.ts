@@ -1,7 +1,7 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 
-// const currentLanguage = localStorage.getItem('language');
+// const currentLanguage = localStorage.getItem("language");
 const currentLanguage =
   typeof window !== "undefined" ? localStorage.getItem("language") : null;
 

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import { Transition } from "react-transition-group";
@@ -11,6 +11,10 @@ import useIsRedirectToCurrentChat from "@/hooks/useIsRedirectToCurrentChat";
 import useOnAuthStateChanged from "@/hooks/useOnAuthStateChanged";
 import useIsOnlineMyStatus from "@/hooks/useIsOnlineMyStatus";
 import useWindowSize from "@/hooks/useWindowSize";
+import useRequestPermission from "@/hooks/useRequestPermission";
+import useAppScreen from "@/hooks/useAppScreen";
+import useDefaultTheme from "@/hooks/useDefaultTheme";
+import useDefaultLanguage from "@/hooks/useDefaultLanguage";
 import { AppScreenType } from "@/types/AppScreenType";
 import "@i18n";
 
@@ -25,54 +29,15 @@ const ChatLayout = ({ children }: { children: React.ReactNode }) => {
   const isLoggedIn = useChatStore((state) => state.isLoggedIn);
 
   const windowHeight = useWindowSize(pathname, setScreen); // size window + resize window
+  useAppScreen(pathname, setScreen);
   useOnAuthStateChanged(); // isAuth
   useIsRedirectToCurrentChat(currentUserUID); // isRedirectToCurrentChat
   useIsOnlineMyStatus(currentUserUID); // update online/offline status in realtime database
+  useRequestPermission(); // requestPermission
+  useDefaultTheme(); // check your current theme
+  useDefaultLanguage(); // check your current language
 
   console.log("screen --> AppScreenType", screen);
-
-  useEffect(() => {
-    if (!localStorage.theme) {
-      const prefersDarkMode = window.matchMedia(
-        "(prefers-color-scheme: dark)"
-      ).matches;
-      localStorage.theme = prefersDarkMode ? "dark" : "light";
-    }
-
-    document.documentElement.classList.toggle(
-      "dark",
-      localStorage.theme === "dark"
-    );
-  }, []);
-
-  // requestPermission
-  useEffect(() => {
-    const requestPermission = async () => {
-      // console.log('Requesting permission...');
-      try {
-        const permission = await Notification.requestPermission();
-        if (permission === "granted") {
-          // console.log('Notification permission granted.');
-        }
-      } catch (error) {
-        console.error("Failed to request notification permission:", error);
-      }
-    };
-
-    requestPermission();
-  }, []);
-
-  useEffect(() => {
-    if (window.innerWidth <= 640) {
-      if (pathname === "/") {
-        setScreen("Sidebar");
-      } else {
-        setScreen("Chat");
-      }
-    } else {
-      setScreen("FullScreen");
-    }
-  }, [pathname]);
 
   return (
     <main>
