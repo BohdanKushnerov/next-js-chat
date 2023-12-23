@@ -17,7 +17,6 @@ import useDefaultTheme from "@/hooks/useDefaultTheme";
 import useDefaultLanguage from "@/hooks/useDefaultLanguage";
 import { AppScreenType } from "@/types/AppScreenType";
 import "@i18n";
-// import Head from "next/head";
 
 const ChatLayout = ({ children }: { children: React.ReactNode }) => {
   const [screen, setScreen] = useState<AppScreenType>("FullScreen");
@@ -41,13 +40,7 @@ const ChatLayout = ({ children }: { children: React.ReactNode }) => {
   console.log("screen --> AppScreenType", screen);
 
   return (
-    <>
-      {/* <Head>
-        <meta
-          name="google-site-verification"
-          content="ucWXrGWx51u-n4BfgmVdfYxSJ32bvhnYxoqLilRg8Zw"
-        />
-      </Head> */}
+    <div>
       <main>
         {/* Auth */}
         {isLoggedIn === false && <>{children}</>}
@@ -124,7 +117,7 @@ const ChatLayout = ({ children }: { children: React.ReactNode }) => {
           </div>
         )}
       </main>
-    </>
+    </div>
   );
 };
 

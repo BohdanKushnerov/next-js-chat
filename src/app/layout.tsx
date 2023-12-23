@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Head from "next/head";
 import { Inter } from "next/font/google";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -26,17 +25,32 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang={currentLanguage || "en"}>
-      <Head>
-        <link rel="preconnect" href="https://googleapis.com" />
-        <link rel="preconnect" href="https://identitytoolkit.googleapis.com" />
-      </Head>
-      <body className={inter.className}>
-        <ChatLayout>{children}</ChatLayout>
-        <ToastContainer />
-        <MainChatLoader />
-        <div id="modal-root"></div>
-      </body>
-    </html>
+    <>
+      <html lang={currentLanguage || "en"}>
+        <head>
+          <link
+            rel="preconnect"
+            href="https://identitytoolkit.googleapis.com"
+          />
+        </head>
+        <body className={inter.className}>
+          <ChatLayout>{children}</ChatLayout>
+          <ToastContainer />
+          <MainChatLoader />
+          <div id="modal-root"></div>
+        </body>
+      </html>
+    </>
   );
+}
+
+{
+  /* <link rel="preconnect" href="https://googleapis.com" /> */
+}
+// <link rel="preconnect" href="https://identitytoolkit.googleapis.com" />
+{
+  /* <meta
+    name="google-site-verification"
+    content="ucWXrGWx51u-n4BfgmVdfYxSJ32bvhnYxoqLilRg8Zw"
+  /> */
 }
