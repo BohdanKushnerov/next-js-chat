@@ -3,19 +3,21 @@
 import { FC, useState } from "react";
 import { ConfirmationResult, updateProfile } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
-import { E164Number } from "libphonenumber-js";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { E164Number } from "libphonenumber-js";
+import { toast } from "react-toastify";
 
 import MyPhoneInput from "../Inputs/MyPhoneInput/MyPhoneInput";
 import CodeInput from "../Inputs/CodeInput/CodeInput";
+import AuthConfirmButton from "../Buttons/AuthConfirmButton/AuthConfirmButton";
 import { auth, db } from "@/myfirebase/config";
 import useChatStore from "@/zustand/store";
-import handleSubmitVerifyCode from "./utils/handleSubmitVerifyCodeVerifyCode";
+import handleSubmitVerifyCode from "./utils/handleSubmitVerifyCode";
 import setUpRecaptcha from "./utils/setUpRecaptcha";
 import { AuthSteps } from "@/types/AuthSteps";
 
-const Auth = () => {
+const Auth: FC = () => {
   const [step, setStep] = useState<AuthSteps>("Step 1/3");
   const [phone, setPhone] = useState<E164Number | string>("16505553435");
   const [code, setCode] = useState("");
@@ -23,11 +25,8 @@ const Auth = () => {
   const [surname, setSurname] = useState("");
   const [confirmationResult, setConfirmationResult] =
     useState<ConfirmationResult | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-
-  console.log("Auth");
-
-  console.log("step", step);
 
   const updateCurrentUser = useChatStore((state) => state.updateCurrentUser);
 
@@ -36,49 +35,81 @@ const Auth = () => {
 
     if (phone) {
       try {
+        setIsLoading(true);
         const response = await setUpRecaptcha(phone, auth);
-        console.log("response setUpRecaptcha", response);
         setStep("Step 2/3");
-        console.log(step);
 
         setConfirmationResult(response);
       } catch (error) {
         console.log("handleSubmitPhone error", error);
+        toast.error(String(error));
+      } finally {
+        setIsLoading(false);
       }
     } else {
       console.error("Номер телефона не определен");
     }
   };
 
+  const handleMannageVerifyCode = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      setIsLoading(true);
+
+      const userCredential = await handleSubmitVerifyCode(
+        confirmationResult,
+        code
+      );
+
+      if (userCredential) {
+        if (userCredential.user.displayName) {
+          router.push("/");
+          return;
+        } else {
+          setStep("Step 3/3");
+        }
+      }
+    } catch (error) {
+      console.log("handleMannageVerifyCode error", error);
+      toast.error(String(error));
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const user = auth.currentUser;
+    try {
+      setIsLoading(true);
+      const user = auth.currentUser;
 
-    if (user) {
-      await updateProfile(user, {
-        displayName: `${name} ${surname}`,
-        // photoURL: "https://example.com/jane-q-user/profile.jpg"
-      });
+      if (user) {
+        await updateProfile(user, {
+          displayName: `${name} ${surname}`,
+        });
 
-      console.log("user handleUpdateProfile", user);
-      // =================обновим юзеру имя в стейте============================
-      await updateCurrentUser(user);
-      // =================создаем юзера для поиска пользователей=======================
-      await setDoc(doc(db, "users", user.uid), {
-        displayName: user.displayName,
-        uid: user.uid,
-        // photoURL:
-        //   'https://cdn.iconscout.com/icon/free/png-256/free-profile-1439375-1214445.png?f=avif&w=128',
-        photoURL: null,
-      });
+        // =================обновим юзеру имя в стейте============================
+        await updateCurrentUser(user);
 
-      // =================создаем обьект чаты нашего юзера которого мы только создали=======================
-      await setDoc(doc(db, "userChats", user.uid), {});
+        // =================создаем юзера для поиска пользователей=======================
+        await setDoc(doc(db, "users", user.uid), {
+          displayName: user.displayName,
+          uid: user.uid,
+          photoURL: null,
+        });
 
-      router.push("/");
-    } else {
-      console.error("Пользователь не вошел в систему");
+        // =================создаем обьект чаты нашего юзера которого мы только создали=======================
+        await setDoc(doc(db, "userChats", user.uid), {});
+
+        router.push("/");
+      }
+    } catch (error) {
+      console.log("handleUpdateProfile error", error);
+      toast.error(String(error));
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -97,7 +128,6 @@ const Auth = () => {
         {step === "Step 1/3" && (
           <>
             <Image
-              priority
               className="mx-auto mb-10 rounded-md"
               src="https://images.nightcafe.studio/jobs/b1mMho0tc6Zo10GkTLXe/b1mMho0tc6Zo10GkTLXe--1--h5wl0.jpg?tr=w-120,c-at_max"
               alt="phone"
@@ -111,13 +141,7 @@ const Auth = () => {
 
             <form onSubmit={handleSubmitPhone} className="flex flex-col gap-1">
               <MyPhoneInput phone={phone} setPhone={setPhone} />
-              <button
-                className="w-full p-2 rounded-md bg-myblue text-white font-bold"
-                id="sign-in-button"
-                type="submit"
-              >
-                Continue
-              </button>
+              <AuthConfirmButton isLoading={isLoading} />
             </form>
           </>
         )}
@@ -136,24 +160,11 @@ const Auth = () => {
             </p>
 
             <form
-              onSubmit={(e) =>
-                handleSubmitVerifyCode(
-                  e,
-                  confirmationResult,
-                  code,
-                  setStep,
-                  router
-                )
-              }
+              onSubmit={handleMannageVerifyCode}
               className="flex flex-col gap-1"
             >
               <CodeInput setCode={setCode} />
-              <button
-                className="w-full p-2 rounded-md bg-myblue text-white font-bold"
-                type="submit"
-              >
-                Continue
-              </button>
+              <AuthConfirmButton isLoading={isLoading} />
             </form>
           </>
         )}
@@ -190,13 +201,7 @@ const Auth = () => {
                   onChange={handleChangeSurname}
                 />
               </label>
-              <button
-                // className="w-full p-2 rounded-md bg-myblue text-white font-bold"
-                className="w-full p-2 rounded-md bg-myblue text-white font-bold"
-                type="submit"
-              >
-                Continue
-              </button>
+              <AuthConfirmButton isLoading={isLoading} />
             </form>
           </>
         )}

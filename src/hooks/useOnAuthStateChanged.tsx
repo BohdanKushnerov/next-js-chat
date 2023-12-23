@@ -14,6 +14,7 @@ const useOnAuthStateChanged = () => {
       if (authUser && authUser.displayName) {
         console.log("authUser", authUser);
         updateCurrentUser(authUser);
+        router.push("/");
       } else {
         updateCurrentUser(null);
         router.push("/auth");
