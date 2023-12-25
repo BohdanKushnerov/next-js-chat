@@ -11,11 +11,8 @@ import ModalWindow from "../ModalWindow/ModalWindow";
 import { auth } from "@/myfirebase/config";
 import useChatStore from "@/zustand/store";
 import useStartTransition from "@/hooks/useStartTransition";
+import { INavbarModal } from "@/interfaces/INavbarModal";
 import "@i18n";
-
-interface INavbarModal {
-  handleToggleModal: () => void;
-}
 
 const NavbarModal: FC<INavbarModal> = ({ handleToggleModal }) => {
   const router = useRouter();

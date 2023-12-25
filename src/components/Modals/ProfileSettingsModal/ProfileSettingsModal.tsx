@@ -16,12 +16,8 @@ import { auth, db, storage } from "@/myfirebase/config";
 import ButtonClose from "@/components/Buttons/ButtonClose/ButtonClose";
 import ModalWindow from "../ModalWindow/ModalWindow";
 import useChatStore from "@/zustand/store";
+import { IProfileSettingsModal } from "@/interfaces/IProfileSettingsModal";
 import "@i18n";
-
-interface IProfileSettingsModal {
-  photoProfileInputRef: RefObject<HTMLInputElement>;
-  handleToggleProfilePhotoModal: () => void;
-}
 
 const ProfileSettingsModal: FC<IProfileSettingsModal> = ({
   photoProfileInputRef,

@@ -49,32 +49,6 @@ const MessageList: FC = () => {
   );
 
   useEffect(() => {
-    // Группировка сообщений по дате
-    if (messages) {
-      // console.log('messages', messages);
-      const grouped = messages.reduce((acc, message) => {
-        // Проверка на существование timestamp
-        const messageData = message.data();
-        // console.log('111', messageData);
-        if (messageData && messageData.date) {
-          const date = messageData.date.toDate(); // Преобразуем _Timestamp в объект Date
-
-          const dateString = date.toISOString().split("T")[0]; // Получаем строку в формате 'YYYY-MM-DD'
-
-          acc[dateString] = acc[dateString] || [];
-          // acc[dateString].push(messageData);
-          acc[dateString].push(message);
-        }
-
-        return acc;
-      }, {});
-
-      console.log("grouped", grouped);
-      setGroupedMessages(grouped);
-    }
-  }, [messages]);
-
-  useEffect(() => {
     if (chatUID === null) return;
 
     localStorage.setItem("currentChatId", chatUID);
@@ -128,6 +102,32 @@ const MessageList: FC = () => {
       localStorage.removeItem("currentChatId");
     };
   }, [chatUID, currentUserUID]);
+
+  // Группировка сообщений по дате
+  useEffect(() => {
+    if (messages) {
+      // console.log('messages', messages);
+      const grouped = messages.reduce((acc, message) => {
+        // Проверка на существование timestamp
+        const messageData = message.data();
+        // console.log('111', messageData);
+        if (messageData && messageData.date) {
+          const date = messageData.date.toDate(); // Преобразуем _Timestamp в объект Date
+
+          const dateString = date.toISOString().split("T")[0]; // Получаем строку в формате 'YYYY-MM-DD'
+
+          acc[dateString] = acc[dateString] || [];
+          // acc[dateString].push(messageData);
+          acc[dateString].push(message);
+        }
+
+        return acc;
+      }, {});
+
+      console.log("grouped", grouped);
+      setGroupedMessages(grouped);
+    }
+  }, [messages]);
 
   // Измерение высоты ul - чата(размер ul с сообщениями) при его изменении
   useEffect(() => {

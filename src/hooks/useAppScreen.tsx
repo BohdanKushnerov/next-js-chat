@@ -1,13 +1,6 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 
-import { AppScreenType } from "@/types/AppScreenType";
-
-interface IUseAppScreen {
-  (
-    pathname: string,
-    setScreen: React.Dispatch<React.SetStateAction<AppScreenType>>
-  ): void;
-}
+import { IUseAppScreen } from "@/interfaces/hooks/IUseAppScreen";
 
 const useAppScreen: IUseAppScreen = (pathname, setScreen) => {
   useEffect(() => {

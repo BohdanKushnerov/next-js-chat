@@ -1,10 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { AppScreenType } from "@/types/AppScreenType";
-
-interface IUseWindowSize {
-  (pathname: string, setScreen: React.Dispatch<AppScreenType>): number;
-}
+import { IUseWindowSize } from "@/interfaces/hooks/IUseWindowSize";
 
 const useWindowSize: IUseWindowSize = (pathname, setScreen) => {
   const [windowHeight, setWindowHeight] = useState(0);

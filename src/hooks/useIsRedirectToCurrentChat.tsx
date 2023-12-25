@@ -5,12 +5,9 @@ import { useRouter } from "next/navigation";
 import { db } from "@/myfirebase/config";
 import useChatStore from "@/zustand/store";
 import handleSelectChat from "@/utils/handleSelectChat";
+import { IUseIsRedirectToCurrentChat } from "@/interfaces/hooks/IUseIsRedirectToCurrentChat";
 import { ChatListItemType } from "@/types/ChatListItemType";
 import { CurrentChatInfo } from "@/types/CurrentChatInfo";
-
-interface IUseIsRedirectToCurrentChat {
-  (currentUserUID: string | null): void;
-}
 
 const useIsRedirectToCurrentChat: IUseIsRedirectToCurrentChat = (
   currentUserUID

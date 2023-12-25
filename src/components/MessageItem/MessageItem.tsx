@@ -1,18 +1,15 @@
-import { FC } from 'react';
+import { FC, lazy } from "react";
 
-import MessageFileItem from '@/components/MessageFileItem/MessageFileItem';
-import useChatStore from '@/zustand/store';
-import useMakeReadMsg from '@/hooks/useMakeReadMsg';
-import formatTime from '@/utils/formatTime';
-import { IMessageItemProps } from '@/interfaces/IMessageItemProps';
-import Image from 'next/image';
-// import sprite from '@assets/sprite.svg';
-// import sprite from '/sprite.svg';
+const MessageAttachedFilesAndImages = lazy(
+  () => import("../MessageAttachedFilesAndImages/MessageAttachedFilesAndImages")
+);
+import useChatStore from "@/zustand/store";
+import useMakeReadMsg from "@/hooks/useMakeReadMsg";
+import formatTime from "@/utils/formatTime";
+import { IMessageItemProps } from "@/interfaces/IMessageItemProps";
 
 const MessageItem: FC<IMessageItemProps> = ({ msg }) => {
-  const currentUserUID = useChatStore(state => state.currentUser.uid);
-
-  // console.log(msg.data());
+  const currentUserUID = useChatStore((state) => state.currentUser.uid);
 
   useMakeReadMsg(msg); // делает при монтировании чата прочитаные мои сообщения
 
@@ -21,85 +18,22 @@ const MessageItem: FC<IMessageItemProps> = ({ msg }) => {
   return (
     <div
       className={`relative flex w-full items-end xl:w-8/12 ${
-        myUID ? 'justify-end' : 'justify-start'
+        myUID ? "justify-end" : "justify-start"
       }`}
     >
       <div
-        className={`flex flex-col py-2 px-4 rounded-xl ${
-          msg.data().file?.length === 1 ? 'max-w-md' : 'max-w-sm'
+        // className={`flex flex-col py-2 px-4 rounded-xl ${
+        className={`flex flex-col py-2 px-4 rounded-xl sm:w-48 md:w-auto ${
+          msg.data().file?.length === 1 ? "max-w-md" : "max-w-sm"
         }  ${
           myUID
-            ? 'bg-emerald-400 dark:bg-cyan-600 rounded-br-none'
-            : 'bg-zinc-100 dark:bg-green-600 rounded-bl-none'
+            ? "bg-emerald-400 dark:bg-cyan-600 rounded-br-none"
+            : "bg-zinc-100 dark:bg-green-600 rounded-bl-none"
         } shadow-secondaryShadow`}
       >
-        <div
-          className={`flex flex-wrap sm:justify-center md:justify-normal gap-0.5 ${
-            msg.data().file?.length === 1 ? 'max-w-md' : 'max-w-xs'
-          }`}
-        >
-          {msg.data().file &&
-            msg.data().file.map(
-              (
-                file: {
-                  url: string;
-                  name: string;
-                  type: string;
-                  // уже есть ширина и высота на сервере
-                  // width?: number;
-                  // height?: number;
-                },
-                index: number
-              ) => {
-                if (
-                  file.type === 'image/png' ||
-                  file.type === 'image/jpeg' ||
-                  file.type === 'image/webp'
-                ) {
-                  if (msg.data().file.length === 1) {
-                    return (
-                      <Image
-                        key={index}
-                        src={file.url}
-                        alt={file.type}
-                        width={448}
-                        height={448}
-                        style={{
-                          // width: 448,
-                          // height: "auto",
-                          maxHeight: 400,
-                          objectFit: "cover",
-                          borderRadius: 6,
-                        }}
-                        loading="lazy"
-                      />
-                    );
-                  } else {
-                    return (
-                      <Image
-                        key={index}
-                        src={file.url}
-                        alt={file.type}
-                        width={index === 0 ? 320 : 159}
-                        height={index === 0 ? 320 : 159}
-                        style={{
-                          // width: index === 0 ? 320 : 159,
-                          // height: "auto",
-                          // maxHeight: index === 0 ? 320 : 159,
-                          objectFit: "cover",
-                          borderRadius: 6,
-                        }}
-                        loading="lazy"
-                      />
-                    );
-                  }
-                } else {
-                  return <MessageFileItem key={index} file={file} />;
-                }
-              }
-            )}
-        </div>
-        {/* message */}
+        {/* message files */}
+        {msg.data().file?.length && <MessageAttachedFilesAndImages msg={msg} />}
+        {/* message text */}
         <p className="w-full break-all text-black dark:text-white">
           {msg.data().message}
         </p>
@@ -116,7 +50,7 @@ const MessageItem: FC<IMessageItemProps> = ({ msg }) => {
                 height={24}
                 className="fill-zinc-800 dark:fill-white"
               >
-                <use href={"/sprite.svg" + '#icon-double-check'} />
+                <use href={"/sprite.svg" + "#icon-double-check"} />
               </svg>
             ) : (
               <svg
@@ -124,7 +58,7 @@ const MessageItem: FC<IMessageItemProps> = ({ msg }) => {
                 height={24}
                 className="fill-zinc-800 dark:fill-white"
               >
-                <use href={"/sprite.svg" + '#icon-single-check'} />
+                <use href={"/sprite.svg" + "#icon-single-check"} />
               </svg>
             )}
           </p>
@@ -134,8 +68,8 @@ const MessageItem: FC<IMessageItemProps> = ({ msg }) => {
       <svg
         className={`absolute ${
           myUID
-            ? '-right-3.5 fill-emerald-400 dark:fill-cyan-600'
-            : '-left-1.5 fill-zinc-100 dark:fill-green-600'
+            ? "-right-3.5 fill-emerald-400 dark:fill-cyan-600"
+            : "-left-1.5 fill-zinc-100 dark:fill-green-600"
         }`}
         width="16px"
         height="16px"

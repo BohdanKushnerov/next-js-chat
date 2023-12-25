@@ -1,17 +1,18 @@
-import { FC } from 'react';
-import { DefaultExtensionType, FileIcon, defaultStyles } from 'react-file-icon';
+import { FC } from "react";
+import { DefaultExtensionType, FileIcon, defaultStyles } from "react-file-icon";
 
-import { IMessageFileItemProps } from '@/interfaces/IMessageFileItemProps';
-import { useFileLinkFromStorage } from '@/hooks/useFileLinkFromStorage';
+import { IMessageFileItemProps } from "@/interfaces/IMessageFileItemProps";
+import { useFileLinkFromStorage } from "@/hooks/useFileLinkFromStorage";
 
 const FileItem: FC<IMessageFileItemProps> = ({ file }) => {
   const storageLink = useFileLinkFromStorage(file); // получения ссилки на файл
 
   const fileType: DefaultExtensionType =
-    (file.name.split('.').pop() as DefaultExtensionType) || 'default';
+    (file.name.split(".").pop() as DefaultExtensionType) || "default";
 
   return (
-    <p className="flex gap-1 items-center h-auto w-full sm:w-40 md:w-full">
+    //"flex gap-1 items-center h-auto w-full sm:w-40 md:w-full">
+    <p className="flex gap-1 items-center h-auto w-full">
       <span className="w-10 h-10">
         <FileIcon extension={fileType} {...defaultStyles[fileType]} />
       </span>

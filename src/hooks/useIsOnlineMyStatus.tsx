@@ -2,10 +2,7 @@ import { useEffect } from "react";
 import { onDisconnect, ref, set } from "firebase/database";
 
 import { database } from "@/myfirebase/config";
-
-interface IUseIsOnlineMyStatus {
-  (currentUserUID: string | null): void;
-}
+import { IUseIsOnlineMyStatus } from "@/interfaces/hooks/IUseIsOnlineMyStatus";
 
 const useIsOnlineMyStatus: IUseIsOnlineMyStatus = (currentUserUID) => {
   // update online/offline status in realtime database

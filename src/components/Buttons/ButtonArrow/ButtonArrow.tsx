@@ -1,8 +1,6 @@
 import { FC } from "react";
 
-interface IButtonArrow {
-  handleClickButtonArrow: () => void;
-}
+import { IButtonArrow } from "@/interfaces/IButtonArrow";
 
 const ButtonArrow: FC<IButtonArrow> = ({ handleClickButtonArrow }) => {
   return (

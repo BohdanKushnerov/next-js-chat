@@ -69,7 +69,7 @@ const ChatListItem: FC<IChatListItemProps> = ({ chatInfo }) => {
                 : "text-zinc-600 dark:text-textSecondary"
             }`}
           >
-            {truncateLastMessageString(chatInfo[1].lastMessage, 25)}
+            {truncateLastMessageString(chatInfo[1].lastMessage, 15)}
           </p>
         </div>
 
