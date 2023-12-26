@@ -1,4 +1,11 @@
-import { Timestamp, addDoc, collection, doc, serverTimestamp, updateDoc } from "firebase/firestore";
+import {
+  Timestamp,
+  addDoc,
+  collection,
+  doc,
+  serverTimestamp,
+  updateDoc,
+} from "firebase/firestore";
 // import { v4 as uuidv4 } from 'uuid';
 
 import { db } from "@/myfirebase/config";
@@ -9,11 +16,7 @@ const handleSendMessage = async (
   currentUserUID: string | null,
   userUID: string | null
 ) => {
-  if (
-    chatUID === null ||
-    currentUserUID === null ||
-    userUID === null 
-  ) {
+  if (chatUID === null || currentUserUID === null || userUID === null) {
     // Обработка случая, когда chatUID равен null
     return;
   }
@@ -26,23 +29,24 @@ const handleSendMessage = async (
       senderUserID: currentUserUID,
       date: Timestamp.now(),
       isRead: false,
+      isShowNotification: true,
     });
 
     // здесь надо переписывать последнее сообщение мне и напарнику
-    await updateDoc(doc(db, 'userChats', currentUserUID), {
-      [chatUID + '.lastMessage']: message,
-      [chatUID + '.senderUserID']: currentUserUID,
-      [chatUID + '.date']: serverTimestamp(),
+    await updateDoc(doc(db, "userChats", currentUserUID), {
+      [chatUID + ".lastMessage"]: message,
+      [chatUID + ".senderUserID"]: currentUserUID,
+      [chatUID + ".date"]: serverTimestamp(),
     });
 
     // =====================================================
-    await updateDoc(doc(db, 'userChats', userUID), {
-      [chatUID + '.lastMessage']: message,
-      [chatUID + '.senderUserID']: currentUserUID,
-      [chatUID + '.date']: serverTimestamp(),
+    await updateDoc(doc(db, "userChats", userUID), {
+      [chatUID + ".lastMessage"]: message,
+      [chatUID + ".senderUserID"]: currentUserUID,
+      [chatUID + ".date"]: serverTimestamp(),
     });
   } catch (error) {
-    console.log('error handleSendMessage', error);
+    console.log("error handleSendMessage", error);
   }
 };
 
