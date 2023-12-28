@@ -48,6 +48,17 @@ const ChatList: FC = () => {
     setCountChatUnreadMessages(countChatUnreadMessages);
   }, [chatUnreadMessages]);
 
+  const changeFavicon = (newFaviconPath: string) => {
+    const link =
+      document.querySelector("link[rel='icon']") ||
+      document.createElement("link");
+
+    const linkElement = link as HTMLLinkElement;
+    linkElement.href = newFaviconPath;
+
+    document.head.appendChild(link);
+  };
+
   useEffect(() => {
     const changeChatTitle = () => {
       const chatOriginalTitle = "My Private Next.js Chat";
@@ -66,8 +77,23 @@ const ChatList: FC = () => {
                 countChatUnreadMessages === 1
                   ? `(${countChatUnreadMessages}) непрочитанное сообщение!`
                   : `(${countChatUnreadMessages}) непрочитанных сообщения!`;
+
+              changeFavicon("/faviconMessage.ico");
             } else {
               document.title = "My Private Next.js Chat";
+
+              const changeFavicon = (newFaviconPath: string) => {
+                const link =
+                  document.querySelector("link[rel='icon']") ||
+                  document.createElement("link");
+
+                const linkElement = link as HTMLLinkElement;
+                linkElement.href = newFaviconPath;
+
+                document.head.appendChild(link);
+              };
+
+              changeFavicon("/favicon.ico");
             }
           };
 
@@ -86,6 +112,8 @@ const ChatList: FC = () => {
         // }
       } else {
         // Вкладка стала активной
+        changeFavicon("/favicon.ico");
+
         if (changeTitleIntervalRef.current) {
           console.log(
             "clearInterval1111111111111111111111=>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
