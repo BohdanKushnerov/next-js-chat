@@ -8,8 +8,6 @@ import useChatStore from "@/zustand/store";
 const MainChatLoader: FC = () => {
   const isLoggedIn = useChatStore((state) => state.isLoggedIn);
 
-  console.log("MainChatLoader ==================================>", MainChatLoader);
-
   return (
     isLoggedIn === null && (
       <>

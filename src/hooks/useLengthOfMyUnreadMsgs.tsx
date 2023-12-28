@@ -28,7 +28,7 @@ const useLengthOfMyUnreadMsgs = (chatInfo: ChatListItemType) => {
         setLengthOfMyUnreadMsgs(querySnapshot.docs.length);
 
         querySnapshot.docs.forEach((msg) => {
-          console.log("msg.data", msg.data());
+          // console.log("msg.data", msg.data());
 
           if (msg.data().isShowNotification) {
             new Notification("new Message", {

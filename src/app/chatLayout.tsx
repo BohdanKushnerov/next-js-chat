@@ -37,7 +37,7 @@ const ChatLayout = ({ children }: { children: React.ReactNode }) => {
   useDefaultTheme(); // check your current theme
   useDefaultLanguage(); // check your current language
 
-  console.log("screen --> AppScreenType", screen);
+  // console.log("screen --> AppScreenType", screen);
 
   return (
     <div>

@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
 
@@ -13,7 +13,10 @@ import handleSelectChat from "@/utils/handleSelectChat";
 import { IChatListItemProps } from "@/interfaces/IChatListItemProps";
 import "@i18n";
 
-const ChatListItem: FC<IChatListItemProps> = ({ chatInfo }) => {
+const ChatListItem: FC<IChatListItemProps> = ({
+  chatInfo,
+  setChatUnreadMessages,
+}) => {
   const { t } = useTranslation();
 
   const { uid } = useChatStore((state) => state.currentUser);
@@ -26,6 +29,13 @@ const ChatListItem: FC<IChatListItemProps> = ({ chatInfo }) => {
   const userInfo = useChatInfo(chatInfo[1].userUID); // обновляет инфо о текущем юзере в списке чата
   const lengthOfMyUnreadMsgs = useLengthOfMyUnreadMsgs(chatInfo); // следим за количеством моих непрочитаных сообщений в ChatItem
   const isReadMyLastMessage = useIsReadMyLastMessage(chatInfo); // прочитаное мое последнее сообщение или нет
+
+  useEffect(() => {
+    setChatUnreadMessages((prev) => ({
+      ...prev,
+      [`${chatInfo[0]}`]: lengthOfMyUnreadMsgs,
+    }));
+  }, [chatInfo, lengthOfMyUnreadMsgs, setChatUnreadMessages]);
 
   // console.log('screen --> ChatListItem');
 

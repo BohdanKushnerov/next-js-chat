@@ -124,7 +124,7 @@ const MessageList: FC = () => {
         return acc;
       }, {});
 
-      console.log("grouped", grouped);
+      // console.log("grouped", grouped);
       setGroupedMessages(grouped);
     }
   }, [messages]);
