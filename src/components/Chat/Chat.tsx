@@ -16,7 +16,7 @@ const Chat: FC = () => {
 
   const { chatUID } = useChatStore((state) => state.currentChatInfo);
 
-  console.log("screen --> Chat");
+  // console.log("screen --> Chat");
 
   return (
     <>

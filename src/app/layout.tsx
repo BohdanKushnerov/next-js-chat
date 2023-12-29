@@ -32,6 +32,7 @@ export default function RootLayout({
             rel="preconnect"
             href="https://identitytoolkit.googleapis.com"
           />
+          <link rel="icon" type="image/ico" href="/favicon.ico" />
         </head>
         <body className={inter.className}>
           <ChatLayout>{children}</ChatLayout>
