@@ -31,6 +31,11 @@ const useLengthOfMyUnreadMsgs = (chatInfo: ChatListItemType) => {
           // console.log("msg.data", msg.data());
 
           if (msg.data().isShowNotification) {
+            console.log(
+              "msg.data().isShowNotification",
+              msg.data().isShowNotification
+            );
+
             new Notification("new Message", {
               body: msg.data().message,
             });
@@ -40,13 +45,14 @@ const useLengthOfMyUnreadMsgs = (chatInfo: ChatListItemType) => {
 
             // Воспроизводим звук
             audioElement.play();
+            
+            updateDoc(doc(db, "chats", chatInfo[0], "messages", `${msg.id}`), {
+              ["isShowNotification"]: false,
+            });
           }
 
           // console.log("msg.data().id", msg);
 
-          updateDoc(doc(db, "chats", chatInfo[0], "messages", `${msg.id}`), {
-            ["isShowNotification"]: false,
-          });
         });
       }
     });

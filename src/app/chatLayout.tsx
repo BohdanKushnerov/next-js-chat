@@ -52,68 +52,72 @@ const ChatLayout = ({ children }: { children: React.ReactNode }) => {
               height: `${windowHeight}px`,
             }}
           >
-            <div className="w-full h-full flex sm:hidden">
-              <Transition
-                nodeRef={nodeRefSidebar}
-                in={screen === "Sidebar"}
-                timeout={300}
-                unmountOnExit
-              >
-                {(state) => (
-                  <div
-                    ref={nodeRefSidebar}
-                    className={`w-full ${
-                      state === "exited" ? "hidden" : ""
-                    } transform transition-transform ${
-                      state === "entered"
-                        ? "translate-x-0 scale-100"
-                        : "-translate-x-full scale-0"
-                    }`}
-                  >
-                    <Sidebar />
-                  </div>
-                )}
-              </Transition>
-              <Transition
-                nodeRef={nodeRefChat}
-                in={screen === "Chat"}
-                timeout={300}
-                unmountOnExit
-              >
-                {(state) => (
-                  <div
-                    ref={nodeRefChat}
-                    className={`w-full transform transition-transform 
+            {screen !== "FullScreen" && (
+              <div className="flex w-full h-full">
+                <Transition
+                  nodeRef={nodeRefSidebar}
+                  in={screen === "Sidebar"}
+                  timeout={300}
+                  unmountOnExit
+                >
+                  {(state) => (
+                    <div
+                      ref={nodeRefSidebar}
+                      className={`w-full ${
+                        state === "exited" ? "hidden" : ""
+                      } transform transition-transform ${
+                        state === "entered"
+                          ? "translate-x-0 scale-100"
+                          : "-translate-x-full scale-0"
+                      }`}
+                    >
+                      <Sidebar />
+                    </div>
+                  )}
+                </Transition>
+                <Transition
+                  nodeRef={nodeRefChat}
+                  in={screen === "Chat"}
+                  timeout={300}
+                  unmountOnExit
+                >
+                  {(state) => (
+                    <div
+                      ref={nodeRefChat}
+                      className={`w-full transform transition-transform 
                   ${state === "exited" ? "hidden" : ""}
                   ${
                     state === "entered"
                       ? "translate-x-0 scale-100"
                       : "translate-x-full scale-0"
                   }`}
-                  >
-                    {children}
-                  </div>
-                )}
-              </Transition>
-            </div>
-            <div
-              className="hidden sm:flex overflow-hidden"
-              style={{
-                height: `${windowHeight}px`,
-              }}
-            >
-              <>
-                <Sidebar />
-                {screen === "FullScreen" && pathname === "/" && (
-                  <div className="relative h-full w-screen xl:flex xl:flex-col xl:items-center bg-transparent overflow-hidden">
-                    <h2 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-4 bg-gray-700 rounded-xl text-center text-white font-black">
-                      {t("EmptyChatNofify")}
-                    </h2>
-                  </div>
-                )}
-                {children}
-              </>
-            </div>
+                    >
+                      {children}
+                    </div>
+                  )}
+                </Transition>
+              </div>
+            )}
+            {screen === "FullScreen" && (
+              <div
+                className="flex overflow-hidden"
+                style={{
+                  height: `${windowHeight}px`,
+                }}
+              >
+                <>
+                  <Sidebar />
+                  {screen === "FullScreen" && pathname === "/" && (
+                    <div className="relative h-full w-screen xl:flex xl:flex-col xl:items-center bg-transparent overflow-hidden">
+                      <h2 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-4 bg-gray-700 rounded-xl text-center text-white font-black">
+                        {t("EmptyChatNofify")}
+                      </h2>
+                    </div>
+                  )}
+                  {children}
+                </>
+              </div>
+            )}
           </div>
         )}
       </main>
