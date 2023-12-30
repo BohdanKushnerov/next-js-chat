@@ -38,6 +38,13 @@ const ChatListItem: FC<IChatListItemProps> = memo(
             [chatInfo[0]]: lengthOfMyUnreadMsgs,
           };
         });
+      } else {
+        setChatUnreadMessages((prev) => {
+          return {
+            ...prev,
+            [chatInfo[0]]: 0,
+          };
+        });
       }
     }, [chatInfo, setChatUnreadMessages, lengthOfMyUnreadMsgs]);
 
