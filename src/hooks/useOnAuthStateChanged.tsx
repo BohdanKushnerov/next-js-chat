@@ -12,7 +12,7 @@ const useOnAuthStateChanged = () => {
   useEffect(() => {
     const unsub = auth.onAuthStateChanged((authUser) => {
       if (authUser && authUser.displayName) {
-        console.log("authUser", authUser);
+        // console.log("authUser", authUser);
         updateCurrentUser(authUser);
         router.push("/");
       } else {

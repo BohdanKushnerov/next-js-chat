@@ -58,6 +58,10 @@ const resources = {
         ImageCaptionPlaceholder: "Add a caption...",
         Send: "Send",
       },
+      ChatListUnreadMsg: {
+        UnreadMessage: "unread message!",
+        UnreadMessages: "unread messages!",
+      },
       Toasts: {
         DeleteMessageSuccess: "Message successfully deleted!",
         EditingMessageSuccess: "Message successfully edited!",
@@ -123,6 +127,10 @@ const resources = {
         Files: "файл(и)",
         ImageCaptionPlaceholder: "Додати підпис...",
         Send: "Відправити",
+      },
+      ChatListUnreadMsg: {
+        UnreadMessage: "непрочитане повідомлення!",
+        UnreadMessages: "непрочитані повідомлення!",
       },
       Toasts: {
         DeleteMessageSuccess: "Повідомлення успішно видалено!",
@@ -190,6 +198,10 @@ const resources = {
         Files: "файл(ы)",
         ImageCaptionPlaceholder: "Добавить подпись...",
         Send: "Отправить",
+      },
+      ChatListUnreadMsg: {
+        UnreadMessage: "непрочитанное сообщение!",
+        UnreadMessages: "непрочитанных сообщения!",
       },
       Toasts: {
         DeleteMessageSuccess: "Сообщение успешно удалено!",

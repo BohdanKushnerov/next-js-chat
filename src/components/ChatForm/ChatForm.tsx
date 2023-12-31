@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef } from "react";
+import React, { FC, useRef } from "react";
 import { useTranslation } from "react-i18next";
 
 import FileInput from "@/components/Inputs/FileInput/FileInput";
@@ -31,11 +31,6 @@ const ChatForm: FC = () => {
   useTyping(message); // запуск таймаута при печатании + сброс при смене чата
 
   // console.log("screen --> ChatForm");
-
-  // юзеффект держит в фокусе инпут ввода сообщений
-  // useEffect(() => {
-  //   inputRef.current?.focus();
-  // });
 
   const handleCancelEditingMessage = () => {
     resetEditingMessage();
