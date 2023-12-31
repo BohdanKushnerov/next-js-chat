@@ -66,6 +66,10 @@ const ProfileSettings: FC = () => {
     }
   };
 
+  const handleManageClickChangeDisplayName = () => {
+    handleClickChangeDisplayName(newDisplayName, uid, updateCurrentUser);
+  };
+
   return (
     <Transition
       nodeRef={nodeRefProfileSettings}
@@ -163,14 +167,7 @@ const ProfileSettings: FC = () => {
                       ? "bg-transparent border-zinc-400 text-zinc-400"
                       : "text-white bg-transparent border-white"
                   } hover:shadow-mainShadow hover:bg-zinc-400 hover:dark:bg-gray-600 cursor-pointer`}
-                  onClick={() =>
-                    uid !== null &&
-                    handleClickChangeDisplayName(
-                      newDisplayName,
-                      uid,
-                      updateCurrentUser
-                    )
-                  }
+                  onClick={handleManageClickChangeDisplayName}
                   disabled={displayName === newDisplayName}
                 >
                   {t("ChangeName")}

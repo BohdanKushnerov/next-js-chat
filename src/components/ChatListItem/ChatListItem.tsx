@@ -1,4 +1,4 @@
-import { FC, memo, useEffect } from "react";
+import { FC, memo } from "react";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
 
@@ -8,6 +8,7 @@ import useChatInfo from "@/hooks/useChatInfo";
 import useIsOnlineStatus from "@/hooks/useIsOnlineStatus";
 import useLengthOfMyUnreadMsgs from "@/hooks/useLengthOfMyUnreadMsgs";
 import useIsReadMyLastMessage from "@/hooks/useIsReadMyLastMessage";
+import useUnreadMessagesInChatListItem from "@/hooks/useUnreadMessagesInChatListItem";
 import truncateLastMessageString from "@/utils/truncateLastMessageString";
 import handleSelectChat from "@/utils/handleSelectChat";
 import { IChatListItemProps } from "@/interfaces/IChatListItemProps";
@@ -27,26 +28,11 @@ const ChatListItem: FC<IChatListItemProps> = memo(
     const userInfo = useChatInfo(chatInfo[1].userUID); // обновляет инфо о текущем юзере в списке чата
     const lengthOfMyUnreadMsgs = useLengthOfMyUnreadMsgs(chatInfo); // следим за количеством моих непрочитаных сообщений в ChatItem
     const isReadMyLastMessage = useIsReadMyLastMessage(chatInfo); // прочитаное мое последнее сообщение или нет
-
-    useEffect(() => {
-      if (lengthOfMyUnreadMsgs) {
-        console.log(lengthOfMyUnreadMsgs);
-        console.log("обновление в ChatListItem");
-        setChatUnreadMessages((prev) => {
-          return {
-            ...prev,
-            [chatInfo[0]]: lengthOfMyUnreadMsgs,
-          };
-        });
-      } else {
-        setChatUnreadMessages((prev) => {
-          return {
-            ...prev,
-            [chatInfo[0]]: 0,
-          };
-        });
-      }
-    }, [chatInfo, setChatUnreadMessages, lengthOfMyUnreadMsgs]);
+    useUnreadMessagesInChatListItem(
+      lengthOfMyUnreadMsgs,
+      setChatUnreadMessages,
+      chatInfo
+    );
 
     // console.log('screen --> ChatListItem');
 

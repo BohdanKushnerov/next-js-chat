@@ -2,17 +2,19 @@ import { useEffect, useRef, useState } from "react";
 
 import changeFaviconBrowserTab from "@/utils/changeFaviconBrowserTab";
 import { IUseBrowserTabTitleVisibilityChange } from "@/interfaces/hooks/IUseBrowserTabTitleVisibilityChange";
+import { useTranslation } from "react-i18next";
 
 const useBrowserTabTitleVisibilityChange: IUseBrowserTabTitleVisibilityChange =
   (countChatUnreadMessages) => {
-    console.log("Test=================================>>>>>>>>>>>>>>>>");
     const [docHidden, setDocHidden] = useState(false);
 
     const changeTitleIntervalRef = useRef<NodeJS.Timeout | null>(null);
+    const { t } = useTranslation("translation", {
+      keyPrefix: "ChatListUnreadMsg",
+    });
 
     useEffect(() => {
       const handleVisibilityChange = () => {
-        console.log("запуск handleVisibilityChange");
         if (document.hidden) {
           setDocHidden(true);
         } else {
@@ -31,30 +33,18 @@ const useBrowserTabTitleVisibilityChange: IUseBrowserTabTitleVisibilityChange =
     }, []);
 
     useEffect(() => {
-      console.log("сработал useEffect");
-
-      console.log("countChatUnreadMessages", countChatUnreadMessages);
-
       const startChangeChatTitle = () => {
-        console.log("вызов startChangeChatTitle");
-
         const chatOriginalTitle = "My Private Next.js Chat";
 
         if (docHidden) {
           // Вкладка стала неактивной
           if (countChatUnreadMessages) {
             const changeTitleInterval = () => {
-              console.log("interval go");
-              console.log(
-                "changeTitleIntervalRef.current",
-                changeTitleIntervalRef.current
-              );
-
               if (document.title === chatOriginalTitle) {
                 document.title =
                   countChatUnreadMessages === 1
-                    ? `(${countChatUnreadMessages}) непрочитанное сообщение!`
-                    : `(${countChatUnreadMessages}) непрочитанных сообщения!`;
+                    ? `(${countChatUnreadMessages}) ${t("UnreadMessage")}`
+                    : `(${countChatUnreadMessages}) ${t("UnreadMessages")}`;
 
                 changeFaviconBrowserTab("/faviconMessage.ico");
               } else {
@@ -76,14 +66,10 @@ const useBrowserTabTitleVisibilityChange: IUseBrowserTabTitleVisibilityChange =
           }
         } else {
           // Вкладка стала активной
-          console.log("вкладка стала активной");
 
           changeFaviconBrowserTab("/favicon.ico");
 
           if (changeTitleIntervalRef.current) {
-            console.log(
-              "clearInterval1111111111111111111111=>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-            );
             clearInterval(changeTitleIntervalRef.current);
             changeTitleIntervalRef.current = null;
           }
@@ -98,9 +84,6 @@ const useBrowserTabTitleVisibilityChange: IUseBrowserTabTitleVisibilityChange =
 
       return () => {
         if (changeTitleIntervalRef.current) {
-          console.log(
-            "clearInterval222222222222222222=>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-          );
           clearInterval(changeTitleIntervalRef.current);
           changeTitleIntervalRef.current = null;
         }

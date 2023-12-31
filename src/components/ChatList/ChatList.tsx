@@ -2,38 +2,23 @@ import { FC, memo, useEffect, useState } from "react";
 
 import ChatListItem from "@/components/ChatListItem/ChatListItem";
 import useMyUserChatList from "@/hooks/useMyUserChatList";
+import useCountChatUnreadMessages from "@/hooks/useCountChatUnreadMessages";
 import useTitleVisibilityChange from "@/hooks/useBrowserTabTitleVisibilityChange";
+import { IUnreadMessages } from "@/interfaces/IUnreadMessages";
 import { ChatListItemType } from "@/types/ChatListItemType";
-
-interface IUnreadMessages {
-  [key: string]: number;
-}
 
 const ChatList: FC = memo(() => {
   const [chatUnreadMessages, setChatUnreadMessages] = useState<IUnreadMessages>(
     {}
   );
-  const [countChatUnreadMessages, setCountChatUnreadMessages] =
-    useState<number>(0);
 
-  console.log("screen --> ChatList");
+  // console.log("screen --> ChatList");
 
   const myUserChatList = useMyUserChatList(); // загрузка списка моих чатов
 
+  const countChatUnreadMessages =
+    useCountChatUnreadMessages(chatUnreadMessages); // дает количество непрочитаных сообщений вцелом
   useTitleVisibilityChange(countChatUnreadMessages); // смена тайтла вкладки когда вкладка неактивная и есть непрочитанные сообщения
-
-  useEffect(() => {
-    const count = Object.values(chatUnreadMessages).reduce(
-      (acc, count) => (acc += count),
-      0
-    );
-
-    if (count === countChatUnreadMessages) {
-      return;
-    } else {
-      setCountChatUnreadMessages(count);
-    }
-  }, [chatUnreadMessages, countChatUnreadMessages]);
 
   return myUserChatList ? (
     <>
