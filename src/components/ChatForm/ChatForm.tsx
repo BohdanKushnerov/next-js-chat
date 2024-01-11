@@ -1,4 +1,4 @@
-import React, { FC, useRef } from "react";
+import React, { FC, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import FileInput from "@/components/Inputs/FileInput/FileInput";
@@ -10,6 +10,7 @@ import useEditingMessage from "@/hooks/useEditingMessage";
 import useClearMessagesOnChatChange from "@/hooks/useClearMessagesOnChatChange";
 import handleUpdateEditMessage from "@/utils/handleUpdateEditMessage";
 import handleSendMessage from "@/utils/handleSendMessage";
+import handleSendAudio from "@/utils/handleSendAudio";
 import "@i18n";
 
 const ChatForm: FC = () => {
@@ -62,60 +63,194 @@ const ChatForm: FC = () => {
       setMessage("");
     }
   };
+  //==============================================
+  const mediaRecorder = useRef<MediaRecorder | null>(null);
+  const [recordingStatus, setRecordingStatus] = useState("inactive");
+  const [audioChunks, setAudioChunks] = useState<Blob[]>([]);
+
+  const mimeType = "audio/webm";
+
+  const startRecording = async () => {
+    const streamData = await navigator.mediaDevices.getUserMedia({
+      audio: true,
+      video: false,
+    });
+
+    if (streamData) {
+      setRecordingStatus("recording");
+      const media = new MediaRecorder(streamData, { mimeType: mimeType });
+      mediaRecorder.current = media;
+      mediaRecorder.current.start();
+      let localAudioChunks: Blob[] = [];
+      mediaRecorder.current.ondataavailable = (event) => {
+        if (typeof event.data === "undefined") return;
+        if (event.data.size === 0) return;
+        localAudioChunks.push(event.data);
+      };
+      setAudioChunks(localAudioChunks);
+    }
+  };
+
+  const stopRecording = () => {
+    setRecordingStatus("inactive");
+    if (mediaRecorder.current) {
+      console.log("mediaRecorder.current", mediaRecorder.current);
+      mediaRecorder.current.stop();
+      mediaRecorder.current.onstop = () => {
+        const audioBlob = new Blob(audioChunks, { type: mimeType });
+
+        if (chatUID && userUID && currentUserUID) {
+          handleSendAudio(audioBlob, chatUID, userUID, currentUserUID);
+        }
+
+        const tracks = mediaRecorder.current?.stream.getTracks();
+        tracks?.forEach((track) => track.stop());
+        setAudioChunks([]);
+      };
+    }
+  };
 
   return (
-    <div className="absolute bottom-0 left-0 z-10 w-full h-24 flex flex-col items-center">
-      <div className="relative flex flex-col justify-center w-full h-full shadow-whiteTopShadow xl:w-8/12">
-        {editingMessageInfo && (
-          <div className="relative flex items-center gap-3 ml-3 mr-16 px-10 rounded-3xl bg-mySeacrhBcg">
-            <svg width={20} height={20}>
-              <use href={"/sprite.svg" + "#icon-pencil"} fill="#FFFFFF" />
-            </svg>
-            <div>
-              <p className="flex text-violet-500">Edit message</p>
-              <p className="text-white">
-                {editingMessageInfo.selectedMessage.data().message ||
-                  t("ChatForm.EmptyMessage")}
-              </p>
-            </div>
-            <button onClick={handleCancelEditingMessage}>
-              <svg className="absolute top-3.5 right-4" width={20} height={20}>
-                <use
-                  href={"/sprite.svg" + "#icon-cross-close"}
-                  fill="#FFFFFF"
-                />
+    <>
+      <div className="absolute bottom-0 left-0 z-10 w-full h-24 flex flex-col items-center">
+        <div className="relative flex flex-col justify-center w-full h-full shadow-whiteTopShadow xl:w-8/12">
+          {editingMessageInfo && (
+            <div className="relative flex items-center gap-3 ml-3 mr-16 px-10 rounded-3xl bg-mySeacrhBcg">
+              <svg width={20} height={20}>
+                <use href={"/sprite.svg" + "#icon-pencil"} fill="#FFFFFF" />
               </svg>
-            </button>
-          </div>
-        )}
-        <form
-          className="flex justify-center items-center gap-2 px-3"
-          onSubmit={handleManageSendMessage}
-        >
-          <input
-            autoFocus={true}
-            className="w-full h-10 py-1 pl-10 pr-14 rounded-3xl bg-zinc-300 dark:bg-mySeacrhBcg text-black dark:text-white placeholder:text-zinc-900 placeholder:dark:text-zinc-400 border-2 border-transparent outline-none focus:border-solid focus:dark:border-cyan-500"
-            type="text"
-            placeholder={t("ChatForm.ChatInputPlaceholder")}
-            ref={inputRef}
-            value={message}
-            onChange={handleChangeMessage}
-          />
-          <button className="flex justify-center items-center h-12 w-12 bg-transparent transition-all duration-300 hover:bg-zinc-100/20 hover:dark:bg-zinc-100/10 rounded-full cursor-pointer">
-            <svg
-              width={24}
-              height={24}
-              className="fill-zinc-200 dark:fill-zinc-400"
-            >
-              <use href={"/sprite.svg" + "#icon-send-message"} />
-            </svg>
-          </button>
-        </form>
-        <FileInput />
-        <Emoji />
+              <div>
+                <p className="flex text-violet-500">Edit message</p>
+                <p className="text-white">
+                  {editingMessageInfo.selectedMessage.data().message ||
+                    t("ChatForm.EmptyMessage")}
+                </p>
+              </div>
+              <button onClick={handleCancelEditingMessage}>
+                <svg
+                  className="absolute top-3.5 right-4"
+                  width={20}
+                  height={20}
+                >
+                  <use
+                    href={"/sprite.svg" + "#icon-cross-close"}
+                    fill="#FFFFFF"
+                  />
+                </svg>
+              </button>
+            </div>
+          )}
+          <form
+            className="flex justify-center items-center gap-2 px-3"
+            onSubmit={handleManageSendMessage}
+          >
+            <input
+              autoFocus={true}
+              className="w-full h-10 py-1 pl-10 pr-14 rounded-3xl bg-zinc-300 dark:bg-mySeacrhBcg text-black dark:text-white placeholder:text-zinc-900 placeholder:dark:text-zinc-400 border-2 border-transparent outline-none focus:border-solid focus:dark:border-cyan-500"
+              type="text"
+              placeholder={t("ChatForm.ChatInputPlaceholder")}
+              ref={inputRef}
+              value={message}
+              onChange={handleChangeMessage}
+            />
+            {message ? (
+              <button
+                className="flex justify-center items-center h-12 w-12 bg-transparent transition-all duration-300 hover:bg-zinc-100/20 hover:dark:bg-zinc-100/10 rounded-full cursor-pointer"
+                type="submit"
+              >
+                <svg
+                  width={24}
+                  height={24}
+                  className="fill-zinc-200 dark:fill-zinc-400"
+                >
+                  <use href={"/sprite.svg" + "#icon-send-message"} />
+                </svg>
+              </button>
+            ) : (
+              <>
+                {recordingStatus === "inactive" && (
+                  <button
+                    className="flex justify-center items-center h-12 w-12 bg-transparent transition-all duration-300 hover:bg-zinc-100/20 hover:dark:bg-zinc-100/10 rounded-full cursor-pointer"
+                    type="button"
+                    onClick={startRecording}
+                  >
+                    <svg
+                      width={24}
+                      height={24}
+                      className="fill-zinc-200 dark:fill-zinc-400"
+                    >
+                      <use href={"/sprite.svg" + "#icon-mic"} />
+                    </svg>
+                  </button>
+                )}
+                {recordingStatus === "recording" && (
+                  <button
+                    className="flex justify-center items-center h-12 w-12 bg-transparent transition-all duration-300 hover:bg-zinc-100/20 hover:dark:bg-zinc-100/10 rounded-full cursor-pointer"
+                    type="button"
+                    onClick={stopRecording}
+                  >
+                    <svg
+                      width={24}
+                      height={24}
+                      className="fill-zinc-200 dark:fill-zinc-400"
+                    >
+                      <use href={"/sprite.svg" + "#icon-stop"} />
+                    </svg>
+                  </button>
+                )}
+              </>
+            )}
+          </form>
+          <FileInput />
+          <Emoji />
+        </div>
       </div>
-    </div>
+      {/*  */}
+      {/* <div className="absolute bottom-0 left-0 z-10 w-full h-24 flex flex-col items-center bg-white">
+        {permission && recordingStatus === "inactive" && (
+          <button onClick={startRecording} type="button">
+            Start Recording
+          </button>
+        )}
+        {recordingStatus === "recording" && (
+          <button onClick={stopRecording} type="button">
+            Stop Recording
+          </button>
+        )}
+        {audio ? (
+          <div className="audio-container">
+            <audio src={audio} controls></audio>
+            <a download href={audio}>
+              Download Recording
+            </a>
+          </div>
+        ) : null}
+      </div> */}
+    </>
   );
 };
 
 export default ChatForm;
+
+{
+  /* <div className="absolute bottom-0 left-0 z-10 w-full h-24 flex flex-col items-center bg-white">
+  {permission && recordingStatus === "inactive" && (
+    <button onClick={startRecording} type="button">
+      Start Recording
+    </button>
+  )}
+  {recordingStatus === "recording" && (
+    <button onClick={stopRecording} type="button">
+      Stop Recording
+    </button>
+  )}
+  {audio ? (
+    <div className="audio-container">
+      <audio src={audio} controls></audio>
+      <a download href={audio}>
+        Download Recording
+      </a>
+    </div>
+  ) : null}
+</div> */
+}

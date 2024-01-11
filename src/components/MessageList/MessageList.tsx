@@ -229,9 +229,15 @@ const MessageList: FC = () => {
     ) {
       const arrayURLsOfFiles = selectedDocDataMessage?.data()?.file;
 
+      await deleteDoc(
+        doc(db, "chats", chatUID, "messages", selectedDocDataMessage.id)
+      ).then(() => {
+        handleCloseModal();
+      });
+
       if (arrayURLsOfFiles) {
         const promisesArrOfURLs = arrayURLsOfFiles.map(
-          (el: { url: string }) => {
+          async (el: { url: string }) => {
             const desertRef = ref(storage, el.url);
 
             return deleteObject(desertRef).then(() =>
@@ -244,12 +250,6 @@ const MessageList: FC = () => {
           console.log("delete All URLs success")
         );
       }
-
-      await deleteDoc(
-        doc(db, "chats", chatUID, "messages", selectedDocDataMessage.id)
-      ).then(() => {
-        handleCloseModal();
-      });
 
       // если последнее сообщение то ставим последнее сообщение messages[selectedItemIndexForOpenModal - 1]
       if (messages.length > 1) {
