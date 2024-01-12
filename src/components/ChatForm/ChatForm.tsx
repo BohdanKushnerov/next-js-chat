@@ -12,6 +12,7 @@ import handleUpdateEditMessage from "@/utils/handleUpdateEditMessage";
 import handleSendMessage from "@/utils/handleSendMessage";
 import handleSendAudio from "@/utils/handleSendAudio";
 import "@i18n";
+import RecordingAudio from "../RecordingAudio/RecordingAudio";
 
 const ChatForm: FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -64,51 +65,51 @@ const ChatForm: FC = () => {
     }
   };
   //==============================================
-  const mediaRecorder = useRef<MediaRecorder | null>(null);
-  const [recordingStatus, setRecordingStatus] = useState("inactive");
-  const [audioChunks, setAudioChunks] = useState<Blob[]>([]);
+  // const mediaRecorder = useRef<MediaRecorder | null>(null);
+  // const [recordingStatus, setRecordingStatus] = useState("inactive");
+  // const [audioChunks, setAudioChunks] = useState<Blob[]>([]);
 
-  const mimeType = "audio/webm";
+  // const mimeType = "audio/webm";
 
-  const startRecording = async () => {
-    const streamData = await navigator.mediaDevices.getUserMedia({
-      audio: true,
-      video: false,
-    });
+  // const startRecording = async () => {
+  //   const streamData = await navigator.mediaDevices.getUserMedia({
+  //     audio: true,
+  //     video: false,
+  //   });
 
-    if (streamData) {
-      setRecordingStatus("recording");
-      const media = new MediaRecorder(streamData, { mimeType: mimeType });
-      mediaRecorder.current = media;
-      mediaRecorder.current.start();
-      let localAudioChunks: Blob[] = [];
-      mediaRecorder.current.ondataavailable = (event) => {
-        if (typeof event.data === "undefined") return;
-        if (event.data.size === 0) return;
-        localAudioChunks.push(event.data);
-      };
-      setAudioChunks(localAudioChunks);
-    }
-  };
+  //   if (streamData) {
+  //     setRecordingStatus("recording");
+  //     const media = new MediaRecorder(streamData, { mimeType: mimeType });
+  //     mediaRecorder.current = media;
+  //     mediaRecorder.current.start();
+  //     let localAudioChunks: Blob[] = [];
+  //     mediaRecorder.current.ondataavailable = (event) => {
+  //       if (typeof event.data === "undefined") return;
+  //       if (event.data.size === 0) return;
+  //       localAudioChunks.push(event.data);
+  //     };
+  //     setAudioChunks(localAudioChunks);
+  //   }
+  // };
 
-  const stopRecording = () => {
-    setRecordingStatus("inactive");
-    if (mediaRecorder.current) {
-      console.log("mediaRecorder.current", mediaRecorder.current);
-      mediaRecorder.current.stop();
-      mediaRecorder.current.onstop = () => {
-        const audioBlob = new Blob(audioChunks, { type: mimeType });
+  // const stopRecording = () => {
+  //   setRecordingStatus("inactive");
+  //   if (mediaRecorder.current) {
+  //     console.log("mediaRecorder.current", mediaRecorder.current);
+  //     mediaRecorder.current.stop();
+  //     mediaRecorder.current.onstop = () => {
+  //       const audioBlob = new Blob(audioChunks, { type: mimeType });
 
-        if (chatUID && userUID && currentUserUID) {
-          handleSendAudio(audioBlob, chatUID, userUID, currentUserUID);
-        }
+  //       if (chatUID && userUID && currentUserUID) {
+  //         handleSendAudio(audioBlob, chatUID, userUID, currentUserUID);
+  //       }
 
-        const tracks = mediaRecorder.current?.stream.getTracks();
-        tracks?.forEach((track) => track.stop());
-        setAudioChunks([]);
-      };
-    }
-  };
+  //       const tracks = mediaRecorder.current?.stream.getTracks();
+  //       tracks?.forEach((track) => track.stop());
+  //       setAudioChunks([]);
+  //     };
+  //   }
+  // };
 
   return (
     <>
@@ -167,38 +168,39 @@ const ChatForm: FC = () => {
                 </svg>
               </button>
             ) : (
-              <>
-                {recordingStatus === "inactive" && (
-                  <button
-                    className="flex justify-center items-center h-12 w-12 bg-transparent transition-all duration-300 hover:bg-zinc-100/20 hover:dark:bg-zinc-100/10 rounded-full cursor-pointer"
-                    type="button"
-                    onClick={startRecording}
-                  >
-                    <svg
-                      width={24}
-                      height={24}
-                      className="fill-zinc-200 dark:fill-zinc-400"
-                    >
-                      <use href={"/sprite.svg" + "#icon-mic"} />
-                    </svg>
-                  </button>
-                )}
-                {recordingStatus === "recording" && (
-                  <button
-                    className="flex justify-center items-center h-12 w-12 bg-transparent transition-all duration-300 hover:bg-zinc-100/20 hover:dark:bg-zinc-100/10 rounded-full cursor-pointer"
-                    type="button"
-                    onClick={stopRecording}
-                  >
-                    <svg
-                      width={24}
-                      height={24}
-                      className="fill-zinc-200 dark:fill-zinc-400"
-                    >
-                      <use href={"/sprite.svg" + "#icon-stop"} />
-                    </svg>
-                  </button>
-                )}
-              </>
+              <RecordingAudio/>
+              // <>
+              //   {recordingStatus === "inactive" && (
+              //     <button
+              //       className="flex justify-center items-center h-12 w-12 bg-transparent transition-all duration-300 hover:bg-zinc-100/20 hover:dark:bg-zinc-100/10 rounded-full cursor-pointer"
+              //       type="button"
+              //       onClick={startRecording}
+              //     >
+              //       <svg
+              //         width={24}
+              //         height={24}
+              //         className="fill-zinc-200 dark:fill-zinc-400"
+              //       >
+              //         <use href={"/sprite.svg" + "#icon-mic"} />
+              //       </svg>
+              //     </button>
+              //   )}
+              //   {recordingStatus === "recording" && (
+              //     <button
+              //       className="flex justify-center items-center h-12 w-12 bg-transparent transition-all duration-300 hover:bg-zinc-100/20 hover:dark:bg-zinc-100/10 rounded-full cursor-pointer"
+              //       type="button"
+              //       onClick={stopRecording}
+              //     >
+              //       <svg
+              //         width={24}
+              //         height={24}
+              //         className="fill-zinc-200 dark:fill-zinc-400"
+              //       >
+              //         <use href={"/sprite.svg" + "#icon-stop"} />
+              //       </svg>
+              //     </button>
+              //   )}
+              // </>
             )}
           </form>
           <FileInput />

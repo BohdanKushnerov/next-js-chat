@@ -240,15 +240,11 @@ const MessageList: FC = () => {
           async (el: { url: string }) => {
             const desertRef = ref(storage, el.url);
 
-            return deleteObject(desertRef).then(() =>
-              console.log("delete URL success")
-            );
+            return deleteObject(desertRef)
           }
         );
 
-        await Promise.all(promisesArrOfURLs).then(() =>
-          console.log("delete All URLs success")
-        );
+        await Promise.all(promisesArrOfURLs)
       }
 
       // если последнее сообщение то ставим последнее сообщение messages[selectedItemIndexForOpenModal - 1]

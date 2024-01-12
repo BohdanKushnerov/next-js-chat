@@ -5,7 +5,6 @@ import { IMessageFileItemProps } from "@/interfaces/IMessageFileItemProps";
 import { useFileLinkFromStorage } from "@/hooks/useFileLinkFromStorage";
 
 const FileItem: FC<IMessageFileItemProps> = ({ file }) => {
-  console.log("file", file);
   const storageLink = useFileLinkFromStorage(file); // получения ссилки на файл
 
   const fileType: DefaultExtensionType =

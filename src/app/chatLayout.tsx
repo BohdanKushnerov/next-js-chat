@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
-import { usePathname } from "next/navigation";
+import React, { memo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Transition } from "react-transition-group";
 
@@ -18,18 +17,20 @@ import useDefaultLanguage from "@/hooks/useDefaultLanguage";
 import { AppScreenType } from "@/types/AppScreenType";
 import "@i18n";
 
-const ChatLayout = ({ children }: { children: React.ReactNode }) => {
+const ChatLayout = memo(({ children }: { children: React.ReactNode }) => {
   const [screen, setScreen] = useState<AppScreenType>("FullScreen");
   const nodeRefSidebar = useRef(null);
   const nodeRefChat = useRef(null);
-  const pathname = usePathname();
+  const pathname = useRef(
+    typeof window !== "undefined" ? window.location.pathname : ""
+  );
   const { t } = useTranslation();
 
   const currentUserUID = useChatStore((state) => state.currentUser.uid);
   const isLoggedIn = useChatStore((state) => state.isLoggedIn);
 
-  const windowHeight = useWindowSize(pathname, setScreen); // size window + resize window
-  useAppScreen(pathname, setScreen);
+  const windowHeight = useWindowSize(pathname.current, setScreen); // size window + resize window
+  useAppScreen(pathname.current, setScreen);
   useOnAuthStateChanged(); // isAuth
   useIsRedirectToCurrentChat(currentUserUID); // isRedirectToCurrentChat
   useIsOnlineMyStatus(currentUserUID); // update online/offline status in realtime database
@@ -37,7 +38,7 @@ const ChatLayout = ({ children }: { children: React.ReactNode }) => {
   useDefaultTheme(); // check your current theme
   useDefaultLanguage(); // check your current language
 
-  // console.log("screen --> AppScreenType", screen);
+  // console.log("screen --> ChatLayout", screen);
 
   return (
     <div>
@@ -107,7 +108,7 @@ const ChatLayout = ({ children }: { children: React.ReactNode }) => {
               >
                 <>
                   <Sidebar />
-                  {screen === "FullScreen" && pathname === "/" && (
+                  {screen === "FullScreen" && pathname.current === "/" && (
                     <div className="relative h-full w-screen xl:flex xl:flex-col xl:items-center bg-transparent overflow-hidden">
                       <h2 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-4 bg-gray-700 rounded-xl text-center text-white font-black">
                         {t("EmptyChatNofify")}
@@ -123,6 +124,8 @@ const ChatLayout = ({ children }: { children: React.ReactNode }) => {
       </main>
     </div>
   );
-};
+});
+
+ChatLayout.displayName = "ChatLayout";
 
 export default ChatLayout;
