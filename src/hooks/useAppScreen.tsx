@@ -4,7 +4,7 @@ import { IUseAppScreen } from "@/interfaces/hooks/IUseAppScreen";
 
 const useAppScreen: IUseAppScreen = (pathname, setScreen) => {
   useEffect(() => {
-    if (window.innerWidth <= 640) {
+    if (window.innerWidth <= 768) {
       if (pathname === "/") {
         setScreen("Sidebar");
       } else {

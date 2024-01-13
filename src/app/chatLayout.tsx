@@ -1,6 +1,7 @@
 "use client";
 
 import React, { memo, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import { Transition } from "react-transition-group";
 
@@ -21,16 +22,17 @@ const ChatLayout = memo(({ children }: { children: React.ReactNode }) => {
   const [screen, setScreen] = useState<AppScreenType>("FullScreen");
   const nodeRefSidebar = useRef(null);
   const nodeRefChat = useRef(null);
-  const pathname = useRef(
-    typeof window !== "undefined" ? window.location.pathname : ""
-  );
+  // const pathname = useRef(
+  //   typeof window !== "undefined" ? window.location.pathname : ""
+  // );
+  const pathname = usePathname();
   const { t } = useTranslation();
 
   const currentUserUID = useChatStore((state) => state.currentUser.uid);
   const isLoggedIn = useChatStore((state) => state.isLoggedIn);
 
-  const windowHeight = useWindowSize(pathname.current, setScreen); // size window + resize window
-  useAppScreen(pathname.current, setScreen);
+  const windowHeight = useWindowSize(pathname, setScreen); // size window + resize window
+  useAppScreen(pathname, setScreen);
   useOnAuthStateChanged(); // isAuth
   useIsRedirectToCurrentChat(currentUserUID); // isRedirectToCurrentChat
   useIsOnlineMyStatus(currentUserUID); // update online/offline status in realtime database
@@ -108,7 +110,7 @@ const ChatLayout = memo(({ children }: { children: React.ReactNode }) => {
               >
                 <>
                   <Sidebar />
-                  {screen === "FullScreen" && pathname.current === "/" && (
+                  {screen === "FullScreen" && pathname === "/" && (
                     <div className="relative h-full w-screen xl:flex xl:flex-col xl:items-center bg-transparent overflow-hidden">
                       <h2 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-4 bg-gray-700 rounded-xl text-center text-white font-black">
                         {t("EmptyChatNofify")}

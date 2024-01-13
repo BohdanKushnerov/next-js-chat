@@ -14,7 +14,7 @@ const FileItem: FC<IMessageFileItemProps> = ({ file }) => {
     <div className="flex gap-1 items-center h-auto w-full">
       {file.type.includes("audio") ? (
         <div>
-          <audio controls>
+          <audio controls className="">
             <source src={file.url} type="audio/webm"></source>
           </audio>
         </div>

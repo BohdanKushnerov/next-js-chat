@@ -23,7 +23,7 @@ const MessageItem: FC<IMessageItemProps> = ({ msg }) => {
     >
       <div
         // className={`flex flex-col py-2 px-4 rounded-xl ${
-        className={`flex flex-col py-2 px-4 rounded-xl sm:w-48 md:w-auto ${
+        className={`flex flex-col py-2 px-4 rounded-xl w-auto ${
           msg.data().file?.length === 1 ? "max-w-md" : "max-w-sm"
         }  ${
           myUID
