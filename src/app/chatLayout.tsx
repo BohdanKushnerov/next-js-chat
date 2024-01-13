@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { memo, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import { Transition } from "react-transition-group";
@@ -18,10 +18,13 @@ import useDefaultLanguage from "@/hooks/useDefaultLanguage";
 import { AppScreenType } from "@/types/AppScreenType";
 import "@i18n";
 
-const ChatLayout = ({ children }: { children: React.ReactNode }) => {
+const ChatLayout = memo(({ children }: { children: React.ReactNode }) => {
   const [screen, setScreen] = useState<AppScreenType>("FullScreen");
   const nodeRefSidebar = useRef(null);
   const nodeRefChat = useRef(null);
+  // const pathname = useRef(
+  //   typeof window !== "undefined" ? window.location.pathname : ""
+  // );
   const pathname = usePathname();
   const { t } = useTranslation();
 
@@ -37,7 +40,7 @@ const ChatLayout = ({ children }: { children: React.ReactNode }) => {
   useDefaultTheme(); // check your current theme
   useDefaultLanguage(); // check your current language
 
-  // console.log("screen --> AppScreenType", screen);
+  // console.log("screen --> ChatLayout", screen);
 
   return (
     <div>
@@ -123,6 +126,8 @@ const ChatLayout = ({ children }: { children: React.ReactNode }) => {
       </main>
     </div>
   );
-};
+});
+
+ChatLayout.displayName = "ChatLayout";
 
 export default ChatLayout;

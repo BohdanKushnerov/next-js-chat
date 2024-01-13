@@ -5,7 +5,6 @@ import { IMessageFileItemProps } from "@/interfaces/IMessageFileItemProps";
 import { useFileLinkFromStorage } from "@/hooks/useFileLinkFromStorage";
 
 const FileItem: FC<IMessageFileItemProps> = ({ file }) => {
-  console.log("file", file);
   const storageLink = useFileLinkFromStorage(file); // получения ссилки на файл
 
   const fileType: DefaultExtensionType =
@@ -15,7 +14,7 @@ const FileItem: FC<IMessageFileItemProps> = ({ file }) => {
     <div className="flex gap-1 items-center h-auto w-full">
       {file.type.includes("audio") ? (
         <div>
-          <audio controls>
+          <audio controls className="">
             <source src={file.url} type="audio/webm"></source>
           </audio>
         </div>

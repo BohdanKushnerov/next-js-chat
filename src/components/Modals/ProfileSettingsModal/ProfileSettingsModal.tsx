@@ -122,7 +122,7 @@ const ProfileSettingsModal: FC<IProfileSettingsModal> = ({
   return (
     <ModalWindow handleToggleModal={handleToggleProfilePhotoModal}>
       <div className="h-full flex justify-center items-center">
-        <div className="relative w-full sm:w-1/2 xl:w-1/3 h-2/3 flex flex-col gap-6 justify-center items-center bg-gray-200 dark:bg-myBlackBcg rounded-3xl shadow-mainShadow">
+        <div className="relative w-full md:w-1/2 xl:w-1/3 h-2/3 flex flex-col gap-6 justify-center items-center bg-gray-200 dark:bg-myBlackBcg rounded-3xl shadow-mainShadow">
           <ButtonClose handleClickButtonClose={handleToggleProfilePhotoModal} />
           {photoProfileInputRef.current?.files && (
             <Image

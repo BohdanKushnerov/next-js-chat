@@ -6,11 +6,11 @@ const useResizeWindow = () => {
   // resize window
   useEffect(() => {
     if (!isMobileScreen) {
-      setIsMobileScreen(window.innerWidth <= 640);
+      setIsMobileScreen(window.innerWidth <= 768);
     }
 
     const handleResize = () => {
-      setIsMobileScreen(window.innerWidth <= 640);
+      setIsMobileScreen(window.innerWidth <= 768);
     };
 
     window.addEventListener("resize", handleResize);

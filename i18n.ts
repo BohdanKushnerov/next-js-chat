@@ -44,7 +44,7 @@ const resources = {
         },
       },
       ChatForm: {
-        ChatInputPlaceholder: "Write your message...",
+        ChatInputPlaceholder: "Message...",
         EditMessage: "Edit message",
         EmptyMessage: "Empty message... =)",
       },
@@ -114,7 +114,7 @@ const resources = {
         },
       },
       ChatForm: {
-        ChatInputPlaceholder: "Напиши своє повідомлення...",
+        ChatInputPlaceholder: "Повідомлення...",
         EditMessage: "Редагувати повідомлення",
         EmptyMessage: "Порожнє повідомлення... =)",
       },
@@ -185,7 +185,7 @@ const resources = {
         },
       },
       ChatForm: {
-        ChatInputPlaceholder: "Напишите своё сообщение...",
+        ChatInputPlaceholder: "Сообщение...",
         EditMessage: "Редактировать сообщение",
         EmptyMessage: "Пустое сообщение... =)",
       },

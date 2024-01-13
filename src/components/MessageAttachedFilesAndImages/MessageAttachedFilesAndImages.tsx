@@ -10,7 +10,7 @@ const MessageAttachedFilesAndImages: FC<IMessageAttachedFilesAndImages> = ({
 }) => {
   return (
     <div
-    // className={`flex flex-wrap sm:justify-center md:justify-normal gap-0.5 ${
+      // className={`flex flex-wrap md:justify-center md:justify-normal gap-0.5 ${
       className={`flex flex-wrap justify-center gap-0.5 ${
         msg.data().file?.length === 1 ? "max-w-md" : "max-w-xs"
       }`}

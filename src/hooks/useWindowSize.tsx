@@ -13,7 +13,7 @@ const useWindowSize: IUseWindowSize = (pathname, setScreen) => {
     const handleResize = () => {
       setWindowHeight(window.innerHeight);
 
-      if (window.innerWidth <= 640) {
+      if (window.innerWidth <= 768) {
         setScreen(pathname === "/" ? "Sidebar" : "Chat");
       } else {
         setScreen("FullScreen");

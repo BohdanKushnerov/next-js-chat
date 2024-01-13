@@ -175,7 +175,7 @@ const FileInputModal: FC<IFileInputModal> = ({
   return (
     <ModalWindow handleToggleModal={handleToggleModal}>
       <div className="h-full flex justify-center items-center">
-        <div className="relative w-full sm:w-1/2 xl:w-1/3 h-1/2 flex flex-col gap-8 justify-between items-center p-2 bg-gray-200 dark:bg-myBlackBcg rounded-3xl shadow-mainShadow">
+        <div className="relative w-full md:w-1/2 xl:w-1/3 h-1/2 flex flex-col gap-8 justify-between items-center p-2 bg-gray-200 dark:bg-myBlackBcg rounded-3xl shadow-mainShadow">
           <p className="text-black dark:text-white font-extrabold">
             {`${t("Send")} ${hiddenFileInput.current?.files?.length} ${t(
               "Files"
@@ -228,7 +228,7 @@ const FileInputModal: FC<IFileInputModal> = ({
             className="w-full flex items-center gap-4 h-8 px-6"
             onSubmit={handleManageSendFile}
           >
-            <div className="relative w-full h-10 sm:w-8/12 ">
+            <div className="relative w-full h-10 md:w-8/12 ">
               <input
                 autoFocus={true}
                 className="w-full h-full py-1 px-10 rounded-3xl bg-zinc-500 dark:bg-mySeacrhBcg text-white outline-none border-2 border-transparent focus:border-cyan-500"

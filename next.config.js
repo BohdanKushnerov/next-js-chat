@@ -15,6 +15,7 @@ const nextConfig = {
     formats: ["image/webp"],
     domains: ["images.nightcafe.studio", "firebasestorage.googleapis.com"],
   },
+  reactStrictMode: false,
 };
 
 module.exports = nextConfig;
